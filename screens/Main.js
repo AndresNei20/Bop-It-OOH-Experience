@@ -1,4 +1,7 @@
-
+const user = {
+    name: "anne",
+    score: 0
+}
 
 export class Main {
     constructor(p5) {
@@ -10,16 +13,59 @@ export class Main {
         
     }
 
+    isOverCircle(x, y, r) {
+        let distance = this.p5.dist(this.p5.mouseX, this.p5.mouseY, x, y);
+        return distance < r;
+    }
+    
+    isOverRect(x, y, w, h) {
+        return this.p5.mouseX > x && this.p5.mouseX < x + w && this.p5.mouseY > y && this.p5.mouseY < y + h;
+    }
+    
+    isOverDonut(x, y, outerR, innerR) {
+        let distance = this.p5.dist(this.p5.mouseX, this.p5.mouseY, x, y);
+        return distance < outerR && distance > innerR;
+    }
+    
+    mouseIsOverShape() {
+        // Botón rojo
+        if (this.isOverCircle(415, 220, 75)) {
+            return 'red';
+        }
+        // Botón magenta
+        if (this.isOverCircle(165, 770, 50)) {
+            return 'magenta';
+        }
+        // Botón bop It
+        if (this.isOverCircle(210, 500, 125)) {
+            return 'bopIt';
+        }
+        // Botón central amarillo
+        if (this.isOverDonut(210, 500, 190, 150)) {
+            return 'yellow';
+        }
+        // Botón naranja
+        if (this.isOverRect(265, 630, 150, 175) && !this.isOverCircle(210, 500, 240)) {
+            return 'orange';
+        }
+        // Botón azul
+        if (this.isOverRect(0, 200, 290, 250) && !this.isOverCircle(210, 500, 240)) {
+            return 'blue';
+        }
+        return null;
+    }
+
     randomColor() {
         const index = Math.floor(Math.random() * this.colors.length);
         return this.colors[index];
     }
 
     showInstruction(p5) {
-        p5.fill(255); // Color blanco para el texto
+        p5.fill(255); 
         p5.textSize(24);
+        p5.text(`Score: ${user.score} `, 20, 40);
 
-        p5.text(`¡Press ${this.currentColor} button!`, this.p5.windowWidth / 2 - 130, 130); // Muestra el mensaje en la esquina superior izquierda
+        p5.text(`¡Press ${this.currentColor} button!`, 90, 130); // Muestra el mensaje en la esquina superior izquierda
     }
 
     mousePressed() {
@@ -27,6 +73,7 @@ export class Main {
 
         if (shapePressed === this.currentColor) {
             console.log('Correct button pressed!');
+            user.score = user.score + 100
             // Puedes hacer algo más aquí si lo deseas, como incrementar una puntuación o similar
             this.currentColor = this.randomColor(); // Genera un nuevo color para el próximo desafío
         } else {
@@ -78,56 +125,10 @@ export class Main {
     }
 
     hideInput(){
-      
-      }
+    }
 
-      showInput(){
+    showInput(){
        
-      }
-
-
-    isOverCircle(x, y, r) {
-        let distance = this.p5.dist(this.p5.mouseX, this.p5.mouseY, x, y);
-        return distance < r;
-    }
-    
-    isOverRect(x, y, w, h) {
-        return this.p5.mouseX > x && this.p5.mouseX < x + w && this.p5.mouseY > y && this.p5.mouseY < y + h;
-    }
-    
-    isOverDonut(x, y, outerR, innerR) {
-        let distance = this.p5.dist(this.p5.mouseX, this.p5.mouseY, x, y);
-        return distance < outerR && distance > innerR;
-    }
-    
-    mouseIsOverShape() {
-        // Botón rojo
-        if (this.isOverCircle(415, 220, 75)) {
-            return 'red';
-        }
-        // Botón magenta
-        if (this.isOverCircle(165, 770, 50)) {
-            return 'magenta';
-        }
-        // Botón bop It
-        if (this.isOverCircle(210, 500, 125)) {
-            return 'bopIt';
-        }
-        // Botón central amarillo
-        if (this.isOverDonut(210, 500, 190, 150)) {
-            return 'yellow';
-        }
-        // Botón naranja
-        if (this.isOverRect(265, 630, 150, 175) && !this.isOverCircle(210, 500, 240)) {
-            return 'orange';
-        }
-        // Botón azul
-        if (this.isOverRect(0, 200, 290, 250) && !this.isOverCircle(210, 500, 240)) {
-            return 'blue';
-        }
-        return null;
     }
 
-    
-      
-    }
+}
