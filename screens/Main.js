@@ -5,11 +5,39 @@ export class Main {
         this.p5 = p5;
         this.p5.noStroke();
         this.bopItImg = this.p5.loadImage('img/logo.png')
+        this.colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
+        this.currentColor = this.randomColor();
         
+    }
+
+    randomColor() {
+        const index = Math.floor(Math.random() * this.colors.length);
+        return this.colors[index];
+    }
+
+    showInstruction(p5) {
+        p5.fill(255); // Color blanco para el texto
+        p5.textSize(24);
+
+        p5.text(`¡Press ${this.currentColor} button!`, this.p5.windowWidth / 2 - 130, 130); // Muestra el mensaje en la esquina superior izquierda
+    }
+
+    mousePressed() {
+        const shapePressed = this.mouseIsOverShape();
+
+        if (shapePressed === this.currentColor) {
+            console.log('Correct button pressed!');
+            // Puedes hacer algo más aquí si lo deseas, como incrementar una puntuación o similar
+            this.currentColor = this.randomColor(); // Genera un nuevo color para el próximo desafío
+        } else {
+            console.log('Wrong button pressed.');
+            // Aquí puedes manejar el caso de que el usuario presione el botón incorrecto, si lo deseas
+        }
     }
 
     show(p5) {
         p5.background('black');
+        this.showInstruction(p5);
 
         // Botón naranja (Rectángulo) 
         p5.fill(255, 165, 0);
@@ -58,7 +86,7 @@ export class Main {
       }
 
 
-      isOverCircle(x, y, r) {
+    isOverCircle(x, y, r) {
         let distance = this.p5.dist(this.p5.mouseX, this.p5.mouseY, x, y);
         return distance < r;
     }
@@ -100,39 +128,6 @@ export class Main {
         return null;
     }
 
-    mousePressed() {
-        const shapePressed = this.mouseIsOverShape();
     
-        switch (shapePressed) {
-            case 'red':
-                // Código para cuando el botón rojo es presionado
-                console.log('Red button pressed');
-                break;
-            case 'magenta':
-                // Código para cuando el botón magenta es presionado
-                console.log('Magenta button pressed');
-                break;
-            case 'yellow':
-                // Código para cuando el botón amarillo es presionado
-                console.log('Yellow button pressed');
-                break;
-            case 'bopIt':
-                // Código para cuando el botón bopIt es presionado
-                console.log('Bop It button pressed');
-                break;
-            case 'orange':
-                // Código para cuando el botón naranja es presionado
-                console.log('Orange button pressed');
-                break;
-            case 'blue':
-                // Código para cuando el botón azul es presionado
-                console.log('Blue button pressed');
-                break;
-            default:
-                // Código para cuando ninguna forma es presionada
-                console.log('No button pressed');
-                break;
-        }
-    }
       
     }
