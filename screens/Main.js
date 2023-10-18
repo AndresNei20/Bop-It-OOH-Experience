@@ -1,24 +1,51 @@
+
+
 export class Main {
     constructor(p5) {
         this.p5 = p5;
-        this.p5 = p5;
-        this.redButton = this.p5.loadImage('img/redButton.png')
-        this.blueButton = this.p5.loadImage('img/blueButton.png')
-        this.pinkButton = this.p5.loadImage('img/pinkButton.png')
-        this.orangeButton = this.p5.loadImage('img/orangeButton.png')
-        this.yellowRing = this.p5.loadImage('img/yellowRing.png')
-        this.bopitButton = this.p5.loadImage('img/bopitButton.png')
+        this.p5.noStroke();
+        this.bopItImg = this.p5.loadImage('img/logo.png')
+        
     }
 
     show(p5) {
         p5.background('black');
 
-        p5.image(this.redButton, 311,70)
-        p5.image(this.blueButton, 0,160,300, 230)
-        p5.image(this.pinkButton, 90,680, 150, 150)
-        p5.image(this.orangeButton, 258,620)
-        p5.image(this.yellowRing, 10,270, 400, 400)
-        p5.image(this.bopitButton, 12,335, 400, 270)
+         // Botón naranja (Rectángulo) 
+        p5.fill(255, 165, 0);
+        p5.rect(265, 630, 150, 175);
+        
+        //Botón azul (Rectángulo)
+        p5.fill(0, 0, 255);
+        p5.rect(0, 200, 290, 250);
+
+        //resta botón azul y naranja
+        p5.fill( 0);
+        p5.ellipse(210, 500, 480);
+        
+        // Botón central (donut)
+        p5.fill(255, 255, 0);
+        p5.ellipse(210, 500, 380);
+        p5.fill(0); // relleno interior
+        p5.ellipse(210, 500, 300);
+        
+        // Botón rojo (circular)
+        p5.fill(400, 0, 0);
+        p5.ellipse(415, 220, 150);
+        
+        // Botón magenta (circular)
+        p5.fill(255, 0, 255);
+        p5.ellipse(165, 770, 100);
+
+        // Botón bop It (circular)
+        p5.fill(89, 20, 179);
+        p5.ellipse(210, 500, 250);
+
+        p5.image(this.bopItImg, 90,420, 250, 168.75)
+        
+        
+
+        
     }
 
     hideInput(){

@@ -11,12 +11,10 @@ const app = p5 => {
 
   p5.setup = function() {
     p5.createCanvas(414, 896);
+    home = new Home(p5);
     dataUser = new DataUser(p5);
-    home = new Home(p5, currentScreen, dataUser);
-    
-   
     main = new Main(p5);
-    currentScreen = home; 
+    currentScreen = main; 
   }
   
   p5.draw = function() {
