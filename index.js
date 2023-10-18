@@ -1,5 +1,5 @@
-import { Home } from './screens/home.js';
-import { Main } from './screens/main.js';
+import { Home } from './screens/Home.js';
+import { Main } from './screens/Main.js';
 import { DataUser } from './screens/DataUser.js';
 
 
