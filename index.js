@@ -35,6 +35,10 @@ const app = p5 => {
       }
   }
   }
+
+  p5.mousePressed = function () {
+    currentScreen.mousePressed();
+}
 }
 
 new p5(app);
