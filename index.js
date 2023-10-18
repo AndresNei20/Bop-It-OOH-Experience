@@ -56,30 +56,101 @@ class Main {
       
     }
 
+  //Esto lo agregue yo (Andres) Pantalla de Shake 
+   //---------------------------------------------SHAKE ACA ABAJO----------------------------------------------
+  class Shake {
+    constructor(){
+      this.shakeImg = loadImage('img/shakeIcons.png');
+      this.shakeDuration = 20000; // Duración de la vibración en milisegundos
+      this.shakeStart = 0; // Variable para almacenar el tiempo de inicio de la vibración
+      this.shakeActive = false; // Variable para rastrear si la vibración está activa
+    }
+    
+    startShake() {
+      this.shakeStart = millis(); // Iniciar el temporizador de vibración
+      this.shakeActive = true;
+    }
+
+    stopShake() {
+      this.shakeActive = false;
+    }
+
+    draw() {
+      // Verificar si la vibración está en curso
+      if (this.shakeActive) {
+        // Calcular una posición de sacudida aleatoria
+        let x = random(-5, 5);
+        let y = random(-5, 5);
+  
+        // Dibujar la imagen con la sacudida
+        image(this.shakeImg, 25 + x, 150 + y);
+      } else {
+        // La vibración ha terminado, muestra la imagen en su posición original
+        image(this.shakeImg, 25, 150);
+      }
+    }
+  }
+   //---------------------------------------------SHAKE ACA ARRIBA-----------------------------------
   
   // sketch.js (archivo principal)
   let home;
   let main;
+  let shake
   let pantallaActual;
+
+ //---------------------------------------------SHAKE ACA ABAJO-----------------------------------
+  let puntaje = 0;
+ //---------------------------------------------SHAKE ACA ARRIBA-----------------------------------------
 
   function setup() {
     createCanvas(414, 896);
     home = new Home();
     main = new Main();
+    shake = new Shake(); //SHAKE
     pantallaActual = home; // Iniciar en la pantalla 1
+
+  //pantalla de Shake 
+ //---------------------------------------------SHAKE ACA ABAJO----------------------------------
+  // Agrega el evento de orientación solo si está disponible
+  if (typeof window.DeviceOrientationEvent !== 'undefined') {
+    window.addEventListener('deviceorientation', handleOrientation, false);
   }
+   //---------------------------------------------SHAKE AQUI ARRIBA---------------------------
+}
+  
   
   function draw() {
     background(0);
     pantallaActual.draw();
-  
+
+//pantalla de shake
+ //---------------------------------------------SHAKE ACA ABAJO---------------------------------
+    fill(255);
+    textSize(24);
+    text(`Puntaje: ${puntaje}`, 10, 30);
+//---------------------------------------------SHAKE ACA ARRIBA------------------------------------
+
     // Lógica para cambiar entre pantallas (por ejemplo, al presionar una tecla)
     if (keyIsPressed) {
       if (key === '1') {
         pantallaActual = home;
       } else if (key === '2') {
         pantallaActual = main;
+      }else if(key === '3'){
+        pantallaActual = shake;
+        shake.startShake();
       }
     }
-  }
 
+  }
+//pantalla de shake------------------------------------SHAKE ACA ABAJO-----------------------------
+  function handleOrientation(event) {
+    if (event.beta > 30) {
+      puntaje += 10; // Aumenta el puntaje en 10 puntos cuando se detecta un shake
+      shake.startShake(); // Inicia la vibración de la pantalla shake
+    } else {
+      shake.stopShake(); // Detiene la vibración cuando se detiene el shake
+    }
+  }
+  //---------------------------------------------SHAKE ACA ARRIBA------------------------------
+  
