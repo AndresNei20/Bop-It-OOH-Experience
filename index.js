@@ -92,7 +92,43 @@ class Main {
   }
    //---------------------------------------------SHAKE ACA ARRIBA-----------------------------------
   
-  // sketch.js (archivo principal)
+
+   //------------------------------------LOSE ACA ABAJO----------------------------------------
+class Lose {
+    constructor() {
+      this.backgroundImage = loadImage('img/redBackgroung.png'); // Reemplaza con tu imagen de fondo
+      this.message = "Oh no, you lost";
+      this.buttonText = "End Game";
+    }
+  
+    draw() {
+      // Configura el fondo con la imagen de pérdida
+      background(this.backgroundImage);
+  
+      // Configura el cuadrado con el texto "Oh no, you lost"
+      fill(255); // Color del cuadrado
+      rectMode(CENTER);
+      rect(width / 2, height / 2, 300, 100); // Ajusta las dimensiones según tus necesidades
+  
+      // Configura el texto
+      fill(0); // Color del texto
+      textAlign(CENTER, CENTER);
+      textSize(24);
+      text(this.message, width / 2, height / 2);
+  
+      // Configura el botón "End Game"
+      fill(255); // Color del botón
+      rect(width / 2, height / 2 + 50, 150, 50); // Ajusta las dimensiones según tus necesidades
+      fill(0); // Color del texto del botón
+      textSize(20);
+      text(this.buttonText, width / 2, height / 2 + 50);
+    }
+  }
+   //------------------------------------LOSE ACA ARRIBA----------------------------------------
+
+
+
+   // sketch.js (archivo principal)
   let home;
   let main;
   let shake
@@ -100,7 +136,11 @@ class Main {
 
  //---------------------------------------------SHAKE ACA ABAJO-----------------------------------
   let puntaje = 0;
- //---------------------------------------------SHAKE ACA ARRIBA-----------------------------------------
+ //---------------------------------------------SHAKE ACA ARRIBA------------------------------------
+
+ //---------------------------------------------LOSE ACA ABAJO-----------------------------------
+  let loseScreen;
+ //---------------------------------------------LOSE ACA ARRIBA------------------------------------
 
   function setup() {
     createCanvas(414, 896);
@@ -115,7 +155,11 @@ class Main {
   if (typeof window.DeviceOrientationEvent !== 'undefined') {
     window.addEventListener('deviceorientation', handleOrientation, false);
   }
-   //---------------------------------------------SHAKE AQUI ARRIBA---------------------------
+  //---------------------------------------------SHAKE AQUI ARRIBA---------------------------
+  
+  //---------------------------------------------lOST AQUI ABAJO---------------------------
+  lose = new Lose();
+  //---------------------------------------------lOST AQUI arriba---------------------------
 }
   
   
@@ -139,6 +183,8 @@ class Main {
       }else if(key === '3'){
         pantallaActual = shake;
         shake.startShake();
+      }else if(key === '6'){
+        pantallaActual = lose;
       }
     }
 
