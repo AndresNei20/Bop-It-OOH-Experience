@@ -17,7 +17,7 @@ const app = p5 => {
     dataUser = new DataUser(p5);
     main = new Main(p5);
     scream = new Scream(p5);
-    currentScreen = home; 
+    currentScreen = scream; 
   }
   
   p5.draw = function() {
