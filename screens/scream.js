@@ -1,3 +1,7 @@
+let mic;
+let amplitudeThreshold = 0.5; // Ajusta según sea necesario para detectar gritos
+let isScreaming = false;
+
 export class Scream {
     constructor(p5) {
         this.p5 = p5;
@@ -8,9 +12,19 @@ export class Scream {
         this.blueLine = this.p5.loadImage('img/blue_line.png');
         this.yellowLine = this.p5.loadImage('img/yellow_line.png');
         
+        mic = new p5.AudioIn();
+        mic.start();
+    }
 
-        this.hideInput();
-
+    getVolume() {
+        let volume = mic.getLevel();
+        
+        // Comprobar si la amplitud supera el umbral
+        if (volume > amplitudeThreshold) {
+            isScreaming = true;
+        } else {
+            isScreaming = false;
+        } 
     }
   
     show(p5) {
@@ -28,7 +42,16 @@ export class Scream {
         p5.image(this.yellowLine, 44, 240);
         p5.image(this.mic, 120, 500);
 
-        
+        // Comprobar el volumen del micrófono
+        this.getVolume();
+
+        // Mostrar el mensaje si es necesario
+        if (isScreaming) {
+            p5.fill(255, 0, 0);  // Color rojo para el mensaje
+            p5.textSize(24);
+            p5.textAlign(p5.CENTER, p5.CENTER);
+            p5.text('¡Estás gritando!', p5.width / 2, p5.height / 2);
+        }
       
 
     
@@ -40,6 +63,10 @@ export class Scream {
 
   showInput(){
 
+  }
+
+  mousePressed(){
+    
   }
 
 }
