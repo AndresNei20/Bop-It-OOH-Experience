@@ -1,12 +1,14 @@
 import { Home } from './screens/home.js';
 import { Main } from './screens/main.js';
 import { DataUser } from './screens/DataUser.js';
+import {Scream} from './screens/scream.js'
 
 
 const app = p5 => {
   let home;
   let main;
   let dataUser;
+  let scream;
   let currentScreen;
 
   p5.setup = function() {
@@ -14,6 +16,7 @@ const app = p5 => {
     home = new Home(p5);
     dataUser = new DataUser(p5);
     main = new Main(p5);
+    scream = new Scream(p5);
     currentScreen = home; 
   }
   

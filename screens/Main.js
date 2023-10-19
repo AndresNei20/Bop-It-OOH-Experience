@@ -87,11 +87,11 @@ export class Main {
         this.showInstruction(p5);
 
         // Botón naranja (Rectángulo) 
-        p5.fill(255, 165, 0);
+        p5.fill(253, 137, 2);
         p5.rect(265, 630, 150, 175);
         
         //Botón azul (Rectángulo)
-        p5.fill(0, 0, 255);
+        p5.fill(4, 157, 214);
         p5.rect(0, 200, 290, 250);
 
         //Circulo para quitarle al botón azul y naranja
@@ -99,14 +99,14 @@ export class Main {
         p5.ellipse(210, 500, 480);
         
         // Botón central amarillo (donut)
-        p5.fill(255, 255, 0);
+        p5.fill(255, 230, 16);
         p5.ellipse(210, 500, 380);
         // Relleno interior del botón central amarillo 
         p5.fill(0); 
         p5.ellipse(210, 500, 300);
         
         // Botón rojo (circular)
-        p5.fill(400, 0, 0);
+        p5.fill(202, 18, 18);
         p5.ellipse(415, 220, 150);
         
         // Botón magenta (circular)
@@ -115,7 +115,7 @@ export class Main {
 
         // Botón bop It (circular)
         p5.fill(89, 20, 179);
-        p5.ellipse(210, 500, 250);
+        p5.ellipse(210, 500, 240);
 
         p5.image(this.bopItImg, 90,420, 250, 168.75)
         
