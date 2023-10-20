@@ -12,11 +12,11 @@ export class Scream {
         this.blueLine = this.p5.loadImage('img/blue_line.png');
         this.yellowLine = this.p5.loadImage('img/yellow_line.png');
         
-        mic = new p5.AudioIn();
-        mic.start();
+        /* mic = new p5.AudioIn();
+        mic.start(); */
     }
 
-    getVolume() {
+    /* getVolume() {
         let volume = mic.getLevel();
         
         // Comprobar si la amplitud supera el umbral
@@ -25,7 +25,7 @@ export class Scream {
         } else {
             isScreaming = false;
         } 
-    }
+    } */
   
     show(p5) {
         p5.background('black');
@@ -42,7 +42,7 @@ export class Scream {
         p5.image(this.yellowLine, 44, 240);
         p5.image(this.mic, 120, 500);
 
-        // Comprobar el volumen del micrófono
+        /* // Comprobar el volumen del micrófono
         this.getVolume();
 
         // Mostrar el mensaje si es necesario
@@ -52,7 +52,7 @@ export class Scream {
             p5.textAlign(p5.CENTER, p5.CENTER);
             p5.text('¡Estás gritando!', p5.width / 2, p5.height / 2);
         }
-      
+       */
 
     
   }
@@ -66,7 +66,7 @@ export class Scream {
   }
 
   mousePressed(){
-    
+
   }
 
 }

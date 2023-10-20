@@ -4,12 +4,21 @@ const user = {
 }
 
 export class Main {
-    constructor(p5) {
+    constructor(p5, socket, pressedFirst) {
         this.p5 = p5;
         this.p5.noStroke();
         this.bopItImg = this.p5.loadImage('img/logo.png')
         this.colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
         this.currentColor = this.randomColor();
+
+        this.pressedFirst = false;
+        this.socket = socket;
+        this.pressedFirst = pressedFirst;
+    // Escuchar si otro jugador presionó el botón primero
+    this.socket.on('other-player-pressed', (item) => {
+      console.log('Other player pressed the button first.');
+      this.pressedFirst = false;
+    });
         
     }
 
@@ -68,20 +77,22 @@ export class Main {
         p5.text(`¡Press ${this.currentColor} button!`, 90, 130); // Muestra el mensaje en la esquina superior izquierda
     }
 
-    mousePressed() {
+    mousePressed(pressedFirst) {
         const shapePressed = this.mouseIsOverShape();
 
-        if (shapePressed === this.currentColor) {
-            console.log('Correct button pressed!');
-            user.score = user.score + 100
-            // Puedes hacer algo más aquí si lo deseas, como incrementar una puntuación o similar
-            this.currentColor = this.randomColor(); // Genera un nuevo color para el próximo desafío
-        } else {
-            console.log('Wrong button pressed.');
-            // Aquí puedes manejar el caso de que el usuario presione el botón incorrecto, si lo deseas
-        }
+  if (shapePressed === this.currentColor) {
+    if (!pressedFirst) {
+      console.log('Correct button pressed!');
+      user.score = user.score + 100;
+      pressedFirst = true;
+      this.currentColor = this.randomColor();
+    } else {
+      console.log('Another player pressed the button first. No points awarded.');
     }
 
+        
+    }
+}
     show(p5) {
         p5.background('black');
         this.showInstruction(p5);
