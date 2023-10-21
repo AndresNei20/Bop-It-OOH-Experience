@@ -10,11 +10,21 @@ export class Home {
         
         this.arrow = this.p5.loadImage('img/arrow.png');
         this.playButton = this.p5.createButton('Play Now');
-        this.playButton.position(this.p5.windowWidth / 2 - 50, this.p5.windowHeight / 2 + 60);
-        this.playButton.mousePressed(this.navigate);
+        this.playButton.position(180, 700);
+        this.playButton.mousePressed(this.handlePlayPressed.bind(this));
 
         this.hideInput();
 
+    }
+
+    setPlayCallback(callback) {
+      this.playCallback = callback;
+    }
+
+    handlePlayPressed() {
+        if (this.playCallback) {
+            this.playCallback();
+        }
     }
   
     show(p5) {
@@ -25,8 +35,7 @@ export class Home {
       p5.image(this.violetCircle, 320, 500);
       p5.image(this.blueCircle, 0, 400);
       p5.image(this.yellowTriangle, 320, 30);
-      p5.image(this.arrow, 140, 500);
-      //p5.image(this.playButton, 110, 700);
+      p5.image(this.arrow, 150, 500);
 
       this.playButton.show();
 
@@ -39,6 +48,10 @@ export class Home {
 
   showInput(){
     this.playButton.show();
+  }
+
+  mousePressed(){
+    
   }
 
 }

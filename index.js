@@ -3,12 +3,13 @@ import { Home } from './screens/home.js';
 import { Main } from './screens/main.js';
 import { DataUser } from './screens/DataUser.js';
 import {Scream} from './screens/scream.js'
-
+import {WaitingPlayers} from './screens/waitingPlayers.js'
 
 const app = p5 => {
   let home;
   let main;
   let dataUser;
+  let waitingPlayers;
   let scream;
   let currentScreen;
   let socket;  
@@ -18,17 +19,32 @@ const app = p5 => {
     p5.createCanvas(414, 896);
     
     socket = io.connect('http://localhost:3000');
+    
 
 
     home = new Home(p5);
+    home.setPlayCallback(() => {
+      currentScreen.hideInput();
+      currentScreen = dataUser;
+      currentScreen.showInput();
+      console.log("Cambiado a DataUser por clic en Play");
+    });
+
     dataUser = new DataUser(p5);
+    dataUser.setSubmitCallback((userData) => {
+      console.log("Datos del usuario recibidos en index.js:", userData);
+
+      currentScreen.hideInput();
+      currentScreen = waitingPlayers; 
+      currentScreen.showInput();
+    });
+
     main = new Main(p5, socket, pressedFirst);
+    waitingPlayers = new WaitingPlayers(p5);
     scream = new Scream(p5);
     currentScreen = home; 
+    
 
-      // Configuración de socket.io
-      
-      //socket = io();
 
       socket.on('other-player-pressed', (item) => {
         console.log('Other player pressed the button first.');
@@ -40,20 +56,9 @@ const app = p5 => {
     p5.background(0);
     currentScreen.show(p5);
   
-    if (p5.keyIsPressed) {
-      if (p5.key === '2') {
-        currentScreen.hideInput();
-        currentScreen = dataUser;
-        currentScreen.showInput();
-        console.log("Cambio a 2")
-      } else if (p5.key === '3') {
-        currentScreen.hideInput();
-        currentScreen = main;
-        currentScreen.showInput();
-        console.log("Cambio a 3")
-      }
   }
-  }
+
+
 
   p5.mousePressed = function () {
     currentScreen.mousePressed(pressedFirst);
