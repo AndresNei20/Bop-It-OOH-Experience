@@ -10,24 +10,24 @@ export class DataUser {
         this.yellowTriangle = this.p5.loadImage('img/yellow_triangle.png');
         
         this.nameInput = this.p5.createInput('');
-        this.nameInput.position(this.p5.windowWidth / 2 - 100, this.p5.windowHeight / 2 - 115);
+        this.nameInput.position(120, 400);
         this.nameInput.size(200);
 
 
     
         this.birthdayInput = this.p5.createInput('');
-        this.birthdayInput.position(this.p5.windowWidth / 2 - 100, this.p5.windowHeight / 2 - 50);
+        this.birthdayInput.position(120, 500);
         this.birthdayInput.size(200);
 
     
         this.emailInput = this.p5.createInput('');
-        this.emailInput.position(this.p5.windowWidth / 2 - 100, this.p5.windowHeight / 2 + 15);
+        this.emailInput.position(120, 600);
         this.emailInput.size(200);
 
 
         this.submitButton = this.p5.createButton('Enviar');
-        this.submitButton.position(this.p5.windowWidth / 2 - 50, this.p5.windowHeight / 2 + 60);
-        this.submitButton.mousePressed(this.submitFormData);
+        this.submitButton.position(190, 700);
+        this.submitButton.mousePressed(this.submitFormData.bind(this));
         this.hideInput();
   
   
@@ -60,31 +60,45 @@ export class DataUser {
       p5.textSize(20);
       p5.fill(250);
 
-      p5.text('Nombre', this.p5.windowWidth / 2 - 100, this.p5.windowHeight / 2 - 122);
-      p5.text('Apellido', this.p5.windowWidth / 2 - 100, this.p5.windowHeight / 2 - 57);
-      p5.text('Celular', this.p5.windowWidth / 2 - 100, this.p5.windowHeight / 2 + 7);
+      p5.text('Nombre', 120, 380);
+      p5.text('Birthday', 120,480);
+      p5.text('Email', 120,580 );
 
   
 
     
   }
 
+  setSubmitCallback(callback) {
+    this.submitCallback = callback;
+}
+
   submitFormData() {
-    const formUserData = [
-      this.nameInput.value(),
-      this.lastNameInput.value(),
-      this.phoneInput.value()
-    ];
-  
-    for(let data of formUserData) {
-      if(!data.trim()) {
-        console.error('Todos los campos deben estar llenos.');
-        return; 
-      }
+      const formUserData = {
+          name: this.nameInput.value(),
+          birthday: this.birthdayInput.value(),
+          email: this.emailInput.value(),
+          score: 0
+      };
+
+      for(let key in formUserData) {
+        if (typeof formUserData[key] === "string" && !formUserData[key].trim()) {
+            console.error('Todos los campos deben estar llenos.');
+            return; 
+        }
     }
-  
-    console.log(formUserData);
-  
+
+      console.log(formUserData);
+
+      if (this.submitCallback) {
+          this.submitCallback(formUserData);
+      }
+
+  }
+
+
+  mousePressed(){
+
   }
 
   }

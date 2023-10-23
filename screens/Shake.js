@@ -17,6 +17,7 @@ export class Shake {
     }
   
     show(p5) {
+      this.p5 = p5;
       // Verificar si la vibración está en curso
       if (this.shakeActive) {
         // Calcular una posición de sacudida aleatoria
@@ -39,11 +40,15 @@ export class Shake {
       }
     }
   
-    hideInput() {
-      // Implementa la lógica para ocultar la entrada de datos si es necesario
+    hideInput(){
+
     }
   
-    showInput() {
-      // Implementa la lógica para mostrar la entrada de datos si es necesario
+    showInput(){
+  
+    }
+  
+    mousePressed(){
+  
     }
   }
