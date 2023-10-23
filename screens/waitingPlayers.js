@@ -24,5 +24,19 @@ export class WaitingPlayers {
         p5.text('Waiting players...', 100, 380);
     }
 
+    hideInput(){
+
+    }
+  
+    showInput(){
+  
+    }
+
+    mousePressed(){
+
+    }
+  
+
+
 
 }
