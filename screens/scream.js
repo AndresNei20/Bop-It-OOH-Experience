@@ -41,6 +41,7 @@ export class Scream {
         p5.image(this.blueLine, 80, 310);
         p5.image(this.yellowLine, 44, 240);
         p5.image(this.mic, 120, 500);
+        
 
         /* // Comprobar el volumen del micrófono
         this.getVolume();

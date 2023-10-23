@@ -1,7 +1,3 @@
-const user = {
-    name: "anne",
-    score: 0
-}
 
 export class Main {
     constructor(p5, socket, pressedFirst) {
@@ -14,11 +10,12 @@ export class Main {
         this.pressedFirst = false;
         this.socket = socket;
         this.pressedFirst = pressedFirst;
-    // Escuchar si otro jugador presionó el botón primero
-    this.socket.on('other-player-pressed', (item) => {
-      console.log('Other player pressed the button first.');
-      this.pressedFirst = false;
-    });
+    
+        // Escuchar si otro jugador presionó el botón primero
+        this.socket.on('other-player-pressed', (item) => {
+        console.log('Other player pressed the button first.');
+        this.pressedFirst = false;
+        });
         
     }
 
@@ -72,27 +69,25 @@ export class Main {
     showInstruction(p5) {
         p5.fill(255); 
         p5.textSize(24);
-        p5.text(`Score: ${user.score} `, 20, 40);
 
         p5.text(`¡Press ${this.currentColor} button!`, 90, 130); // Muestra el mensaje en la esquina superior izquierda
     }
 
-    mousePressed(pressedFirst) {
+    mousePressed(pressedFirst, playerData) {
         const shapePressed = this.mouseIsOverShape();
 
-  if (shapePressed === this.currentColor) {
-    if (!pressedFirst) {
-      console.log('Correct button pressed!');
-      user.score = user.score + 100;
-      pressedFirst = true;
-      this.currentColor = this.randomColor();
-    } else {
-      console.log('Another player pressed the button first. No points awarded.');
+        if (shapePressed === this.currentColor) {
+            if (!pressedFirst) {
+            console.log('Correct button pressed!');
+            playerData.score = playerData.score + 100;
+            pressedFirst = true;
+            this.currentColor = this.randomColor();
+            } else {
+            console.log('Another player pressed the button first. No points awarded.');
+            }   
+        }
     }
 
-        
-    }
-}
     show(p5) {
         p5.background('black');
         this.showInstruction(p5);
