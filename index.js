@@ -1,6 +1,6 @@
 import {io} from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
-import { Home } from './screens/home.js';
-import { Main } from './screens/main.js';
+import { Home } from './screens/Home';
+import { Main } from './screens/Main.js';
 import { DataUser } from './screens/DataUser.js';
 import {Scream} from './screens/scream.js'
 import { Shake } from './screens/Shake.js';
