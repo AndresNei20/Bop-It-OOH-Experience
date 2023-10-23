@@ -22,6 +22,7 @@ const app = p5 => {
   let currentScreen;
   let socket; 
   let score; 
+  let currentColor;
   let pressedFirst = false;  
 
   let playerData = {
@@ -32,7 +33,7 @@ const app = p5 => {
 };
 
   //Timer
-  let startingTime = 10;// el timer empezara desde 60 segundos
+  let startingTime = 60;// el timer empezara desde 60 segundos
   let lastUpdateTime = 0;
   let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
   let timeStarted = false; //indica si el temporizador ya esta activo
@@ -43,13 +44,32 @@ const app = p5 => {
     
     socket = io.connect('http://localhost:3000');
     
-    home = new Home(p5);
-    home.setPlayCallback(() => {
-      currentScreen.hideInput();
-      currentScreen = dataUser;
-      currentScreen.showInput();
-      console.log("Cambiado a DataUser por clic en Play");
+    socket.on('two-players-connected', () => {
+      console.log('Receive Two players connected, send go to main');
+      
+      if(currentScreen == waitingPlayers){
+        currentScreen.hideInput();
+        currentScreen = main;
+        currentScreen.showInput();
+      }
+      
     });
+
+    socket.on('color', (color) => {
+        console.log("Received color:", color);
+        currentColor = color;
+    });
+
+    socket.on('first-player-pressed', (user) => {
+        console.log('I pressed the button first and earned points!');
+        
+    });
+    
+    socket.on('other-player-pressed', (item) => {
+        console.log('Other player pressed the button first.');
+    }); 
+    
+    home = new Home(p5);
 
     dataUser = new DataUser(p5);
     dataUser.setSubmitCallback((userData) => {
@@ -62,6 +82,7 @@ const app = p5 => {
     });
 
     main = new Main(p5, socket, pressedFirst);
+
     waitingPlayers = new WaitingPlayers(p5);
     scream = new Scream(p5);
     shake = new Shake(p5);
@@ -90,7 +111,7 @@ const app = p5 => {
       console.log("Cambiado a score por clic en see results");
     });
 
-    currentScreen = score; 
+    currentScreen = main; 
     
     //Timer init
     lastUpdateTime = p5.millis(); // Inicializa el último tiempo de actualización
@@ -99,19 +120,6 @@ const app = p5 => {
       window.addEventListener('deviceorientation', shake.handleShake, false);
     }
 
-
-    socket.on('two-players-connected', () => {
-        console.log('Dos jugadores conectados. Cambiando a pantalla Main.');
-      
-        currentScreen.hideInput();
-        currentScreen = main;
-        currentScreen.showInput();
-      });
-
-    socket.on('other-player-pressed', (item) => {
-      console.log('Other player pressed the button first.');
-      pressedFirst = false;
-    });
 
   
   }
@@ -143,6 +151,12 @@ const app = p5 => {
              p5.textSize(28);//shake
              p5.fill(255);//shake
              p5.text(`Score: ${playerData.score}`, 150, 150);//shake
+
+             //Instruction
+             p5.textSize(20);
+             p5.fill(255);
+             p5.text(`Press the ${currentColor} button`, 100, 180);
+
 
       if (currentTime - lastUpdateTime >= 1000) {
         // Actualiza el contador de tiempo cada segundo
@@ -179,12 +193,9 @@ const app = p5 => {
 
 
   p5.mousePressed = function () {
-    currentScreen.mousePressed(pressedFirst, playerData);
+    currentScreen.mousePressed(playerData, currentColor);
+    pressedFirst = main.getPressedFirstStatus();
 
-    // Enviar los datos del usuario al servidor
-    if (currentScreen === main && pressedFirst) {
-      socket.emit('send-item', user);
-    }
   }
 
 }

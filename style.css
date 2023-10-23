@@ -1,4 +1,9 @@
 .p5Canvas {
     margin: auto;
+    margin: 0;
     
+}
+
+body{
+    margin: 0;
 }

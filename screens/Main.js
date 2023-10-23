@@ -4,19 +4,11 @@ export class Main {
         this.p5 = p5;
         this.p5.noStroke();
         this.bopItImg = this.p5.loadImage('img/logo.png')
-        this.colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
-        this.currentColor = this.randomColor();
 
         this.pressedFirst = false;
         this.socket = socket;
         this.pressedFirst = pressedFirst;
     
-        // Escuchar si otro jugador presionó el botón primero
-        this.socket.on('other-player-pressed', (item) => {
-        console.log('Other player pressed the button first.');
-        this.pressedFirst = false;
-        });
-        
     }
 
     isOverCircle(x, y, r) {
@@ -61,36 +53,27 @@ export class Main {
         return null;
     }
 
-    randomColor() {
-        const index = Math.floor(Math.random() * this.colors.length);
-        return this.colors[index];
-    }
-
-    showInstruction(p5) {
-        p5.fill(255); 
-        p5.textSize(24);
-
-        p5.text(`¡Press ${this.currentColor} button!`, 90, 130); // Muestra el mensaje en la esquina superior izquierda
-    }
-
-    mousePressed(pressedFirst, playerData) {
+    mousePressed(playerData, currentColor) {
         const shapePressed = this.mouseIsOverShape();
 
-        if (shapePressed === this.currentColor) {
-            if (!pressedFirst) {
+        if (shapePressed === currentColor && !this.pressedFirst) {
             console.log('Correct button pressed!');
-            playerData.score = playerData.score + 100;
-            pressedFirst = true;
-            this.currentColor = this.randomColor();
-            } else {
-            console.log('Another player pressed the button first. No points awarded.');
-            }   
-        }
+            this.pressedFirst = true;
+            playerData.score += 100; // Otorga puntos al jugador que presionó primero
+            
+            this.socket.emit('send-item', playerData.name);
+            this.socket.emit('generate-new-color');
+            this.pressedFirst = false;
+        } 
     }
+
+    getPressedFirstStatus() {
+        return this.pressedFirst;
+    }
+
 
     show(p5) {
         p5.background('black');
-        this.showInstruction(p5);
 
         // Botón naranja (Rectángulo) 
         p5.fill(253, 137, 2);
