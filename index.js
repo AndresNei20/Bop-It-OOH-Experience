@@ -7,6 +7,7 @@ import { Shake } from './screens/Shake.js';
 import { Winner } from './screens/Winner.js';
 import { Loser } from './screens/Loser.js';
 import {Score} from './screens/Score.js'
+import { Cupon } from './screens/Cupon.js';
 import {WaitingPlayers} from './screens/waitingPlayers.js'
 
 
@@ -18,6 +19,7 @@ const app = p5 => {
   let scream;
   let shake;
   let winner;
+  let cupon;
   let loser;
   let currentScreen;
   let socket; 
@@ -43,33 +45,15 @@ const app = p5 => {
     p5.createCanvas(414, 896);
     
     socket = io.connect('http://localhost:3000');
-    
-    socket.on('two-players-connected', () => {
-      console.log('Receive Two players connected, send go to main');
-      
-      if(currentScreen == waitingPlayers){
-        currentScreen.hideInput();
-        currentScreen = main;
-        currentScreen.showInput();
-      }
-      
-    });
 
-    socket.on('color', (color) => {
-        console.log("Received color:", color);
-        currentColor = color;
-    });
-
-    socket.on('first-player-pressed', (user) => {
-        console.log('I pressed the button first and earned points!');
-        
-    });
-    
-    socket.on('other-player-pressed', (item) => {
-        console.log('Other player pressed the button first.');
-    }); 
     
     home = new Home(p5);
+    home.setPlayCallback(() => {
+      console.log("Cambiado a dataUser por clic en Play Now");
+      currentScreen.hideInput();
+      currentScreen = dataUser; 
+      currentScreen.showInput();
+    });
 
     dataUser = new DataUser(p5);
     dataUser.setSubmitCallback((userData) => {
@@ -79,11 +63,16 @@ const app = p5 => {
       currentScreen.hideInput();
       currentScreen = waitingPlayers; 
       currentScreen.showInput();
+      if (currentScreen === waitingPlayers) {
+        socket.emit('players-waiting');
+      }
     });
-
-    main = new Main(p5, socket, pressedFirst);
-
+    
+    
     waitingPlayers = new WaitingPlayers(p5);
+    
+    main = new Main(p5, socket, pressedFirst);
+    
     scream = new Scream(p5);
     shake = new Shake(p5);
 
@@ -111,28 +100,41 @@ const app = p5 => {
       console.log("Cambiado a score por clic en see results");
     });
 
-    currentScreen = main; 
+    currentScreen = home; 
     
-    //Timer init
-    lastUpdateTime = p5.millis(); // Inicializa el último tiempo de actualización
 
-    if (typeof window.DeviceOrientationEvent !== 'undefined') { //evento de orientación
-      window.addEventListener('deviceorientation', shake.handleShake, false);
-    }
+    socket.on('go-to-main-screen', () => {
+        currentScreen = main;
+        // Aquí puedes agregar cualquier otra lógica necesaria para cambiar de pantalla.
+    });
+    
+    socket.on('start-timer', () => {
+        if (!timeStarted && currentScreen === main) {
+            timeStarted = true;
+            console.log("Comienza el temporizador");
+        }
+    });
 
+    socket.on('color', (color) => {
+        console.log("Received color:", color);
+        currentColor = color;
+    });
 
+    socket.on('first-player-pressed', (user) => {
+        console.log('I pressed the button first and earned points!');
+        
+    });
+    
+    socket.on('other-player-pressed', (item) => {
+        console.log('Other player pressed the button first.');
+    }); 
+    
   
   }
   
   p5.draw = function() {
     p5.background(0);
     currentScreen.show(p5);
-
-    if (currentScreen === main && !timeStarted) {
-      // Inicia el temporizador cuando currentScreen sea igual a main y no se haya iniciado antes
-      timeStarted = true;
-      console.log("Comienza el temporizador");
-      }
 
     // Timer function 
     if (timeStarted) {
