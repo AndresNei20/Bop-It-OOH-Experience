@@ -42,7 +42,8 @@ const players = {
     birthday: "",
     email: "",
     score: 0,
-    color: ""
+    color: "",
+    isWaiting: false,
   },
   player2: {
     id: 0,
@@ -50,7 +51,8 @@ const players = {
     birthday: "",
     email: "",
     score: 0,
-    color: ""
+    color: "",
+    isWaiting: false
   }
 };
 
@@ -87,6 +89,7 @@ io.on('connect', (socket) => {
       // Envía el nombre asignado al cliente
       console.log('assigned', assigned)
       socket.emit('assigned', assigned);
+      console.log(players)
 
     });
     
@@ -101,14 +104,16 @@ io.on('connect', (socket) => {
     })
 
     socket.on('players-waiting', () => {
-        console.log("players waiting:", playersConnected )
-        if (playersConnected == 2) { 
-            io.emit('go-to-main-screen');
-            io.emit('start-timer');
-            io.emit('color', currentColor)
-            playersConnected = 0; // Reset para próximas conexiones
-        }
-    });
+      console.log("Jugador esperando:", socket.id);
+  
+      if (players.player1.id === socket.id) {
+          players.player1.isWaiting = true;
+      } else if (players.player2.id === socket.id) {
+          players.player2.isWaiting = true;
+      }
+  
+      checkIfBothPlayersAreWaiting();
+  });
 
     socket.on("generate-new-color", () => { // Escuchar una solicitud de un nuevo color
       currentColor = randomColor(); // Generar un nuevo color
@@ -126,11 +131,7 @@ io.on('connect', (socket) => {
 
     socket.on("disconnect", () => {
       console.log("Cliente desconectado:", socket.id);
-      if (players.player1.id === socket.id || players.player2.id === socket.id) {
-          // Aquí asumimos que si el ID coincide con player1 o player2, es un jugador
-          playersConnected--;
-          console.log("Jugador desconectado. Total de jugadores:", playersConnected);
-  
+      if (players.player1.id === socket.id || players.player2.id === socket.id) { 
           if (players.player1.id === socket.id) {
             players.player1 =
            {
@@ -139,7 +140,8 @@ io.on('connect', (socket) => {
             birthday: "",
             email: "",
             score: 0,
-            color: ""
+            color: "",
+            isWaiting: false,
           }
           }
           
@@ -150,13 +152,30 @@ io.on('connect', (socket) => {
             birthday: "",
             email: "",
             score: 0,
-            color: ""
+            color: "",
+            isWaiting: false,
           }
           };
+
+          playersConnected--;
+          console.log("Jugador desconectado. Total de jugadores:", playersConnected);
       } else {
           console.log("Mupi desconectado");
           // Código para manejar la desconexión del mupi...
       }
   });
 });
+
+function checkIfBothPlayersAreWaiting() {
+  if (players.player1.isWaiting && players.player2.isWaiting) {
+      io.emit('go-to-main-screen');
+      io.emit('start-timer');
+      io.emit('color', currentColor);
+
+      // Restablecer el estado de espera
+      players.player1.isWaiting = false;
+      players.player2.isWaiting = false;
+      console.log("Ambos jugadores están esperando. Iniciando partida...");
+  }
+}
 

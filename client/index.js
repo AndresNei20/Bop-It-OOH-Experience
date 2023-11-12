@@ -33,12 +33,13 @@ const app = p5 => {
     birthday: "",
     email: "",
     score: 0,
-    color: ""
+    color: "",
+    isWaiting: false,
   }
   
 
   //Timer
-  let startingTime = 60;// el timer empezara desde 60 segundos
+  let startingTime = 10;// el timer empezara desde 60 segundos
   let lastUpdateTime = 0;
   let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
   let timeStarted = false; //indica si el temporizador ya esta activo
@@ -66,7 +67,8 @@ const app = p5 => {
         birthday: userData.birthday,
         email: userData.email,
         score: playerData.score,
-        color: playerData.color
+        color: playerData.color,
+        isWaiting : playerData.isWaiting
       }
       console.log("Datos del usuario recibidos en index.js:", playerData);
 
@@ -103,7 +105,7 @@ const app = p5 => {
       console.log("Cambiado a score por clic en see results");
     });
 
-    score = new Score(p5, playerData);
+    score = new Score(p5);
     score.setNextCallback(() => {
       currentScreen.hideInput();
       currentScreen = cupon;
@@ -184,6 +186,7 @@ const app = p5 => {
           currentDisplayTime -= 1;
         } else {
           console.log("¡Tiempo agotado!");
+          socket.emit('players-details', playerData)
           timerVisible = false; // Oculta el temporizador
           timeStarted = false; // Detiene el temporizador
           currentDisplayTime = 0; // Asegura que el tiempo sea 0
@@ -195,6 +198,7 @@ const app = p5 => {
 
     
     if(currentScreen == score){
+      
       //Score
       p5.textSize(45);
       p5.fill(255);
