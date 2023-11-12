@@ -39,7 +39,8 @@ const app = p5 => {
     p5.setup = function() {
         p5.createCanvas(600, 812);
 
-        socket = io.connect('http://localhost:3000');
+        socket = io.connect('http://localhost:3000', {path: '/real-time'});
+        socket.emit("mupi-connected");
 
         go = new Go(p5);
         instructions = new Instructions(p5);

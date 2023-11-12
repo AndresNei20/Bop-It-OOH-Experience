@@ -28,11 +28,13 @@ const app = p5 => {
   let pressedFirst = false;  
 
   let playerData = {
+    id: 0,
     name: "",
     birthday: "",
     email: "",
-    score: 0
-};
+    score: 0,
+    color: ""
+  }
 
   //Timer
   let startingTime = 60;// el timer empezara desde 60 segundos
@@ -44,7 +46,8 @@ const app = p5 => {
   p5.setup = function() {
     p5.createCanvas(414, 896);
     
-    socket = io.connect('http://localhost:3000');
+    socket = io.connect('http://localhost:3000', {path: '/real-time'});
+    socket.emit("player-connected")
 
     
     home = new Home(p5);
@@ -55,7 +58,7 @@ const app = p5 => {
       currentScreen.showInput();
     });
 
-    dataUser = new DataUser(p5);
+    dataUser = new DataUser(p5, playerData);
     dataUser.setSubmitCallback((userData) => {
       console.log("Datos del usuario recibidos en index.js:", userData);
       playerData = userData
@@ -101,6 +104,11 @@ const app = p5 => {
     });
 
     currentScreen = home; 
+
+    socket.on('assigned', (playerAsig) => {
+      playerData = playerAsig;
+      console.log("Color assigned:", playerData.color);
+    });
     
 
     socket.on('go-to-main-screen', () => {

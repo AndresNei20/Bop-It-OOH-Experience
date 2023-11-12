@@ -73,12 +73,14 @@ export class DataUser {
     this.submitCallback = callback;
 }
 
-  submitFormData() {
+  submitFormData(DataUser) {
       const formUserData = {
+          id: DataUser.id,
           name: this.nameInput.value(),
           birthday: this.birthdayInput.value(),
           email: this.emailInput.value(),
-          score: 0
+          score: DataUser,score,
+          color: DataUser.color
       };
 
       for(let key in formUserData) {
