@@ -10,10 +10,6 @@ app.use(cors())
 const server = http.createServer(app);;
 
 server.listen(PORT, () => {
-  console.table({
-      'Player:': 'http://localhost:3000/player',
-      'Mupi:': 'http://localhost:3000/mupi',
-  });
   console.log(`Server listening on port ${PORT}`);
 });
 
@@ -30,7 +26,7 @@ const io = require('socket.io')(server, {
   }
 });
 
-let playersWaiting = 0;
+let playersConnected = 0;
 let firstPressed = false;
 let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
 function randomColor() {
@@ -65,13 +61,13 @@ app.get('/', (req, res) => {
 
 io.on('connect', (socket) => {
     console.log("Client connected:" );
-    console.log("players waiting:", playersWaiting)
+    playersConnected++;
+    console.log("players connected:", playersConnected)
 
     let assigned = {};
     
     socket.on('player-connected', () => {
-      playersWaiting++;
-      console.log("players waiting:", playersWaiting)
+      console.log("players connected:", playersConnected)
 
       if (!players.player1.id) {
           players.player1.id = socket.id;
@@ -95,14 +91,23 @@ io.on('connect', (socket) => {
       console.log("mupi connected")
     });
     
+    socket.on('players-details', (data) => {
+      if (data.id == players.player1.id) {
+        players.player1 = data;
+      } else if(data.id == players.player2.id) {
+        players.player2 = data;
+      }
+
+      console.log("Players: ", players)
+    })
 
     socket.on('players-waiting', () => {
-        console.log("players waiting:", playersWaiting )
-        if (playersWaiting == 2) { 
+        console.log("players waiting:", playersConnected )
+        if (playersConnected == 2) { 
             io.emit('go-to-main-screen');
             io.emit('start-timer');
             io.emit('color', currentColor)
-            playersWaiting = 0; // Reset para próximas conexiones
+            playersConnected = 0; // Reset para próximas conexiones
         }
     });
 
@@ -133,7 +138,6 @@ io.on('connect', (socket) => {
           score: 0,
           color: ""
         }
-        playersWaiting--;
         }
         
         if (players.player2.id === socket.id) 
@@ -145,9 +149,7 @@ io.on('connect', (socket) => {
           score: 0,
           color: ""
         }
-        playersWaiting--;
         };
-
         io.emit('playersDetails', players);
     })
 });

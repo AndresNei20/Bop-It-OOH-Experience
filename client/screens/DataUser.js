@@ -1,5 +1,6 @@
+
 export class DataUser {
-    
+
     constructor(p5) {
         this.p5 = p5;
         this.logo = this.p5.loadImage('img/logo.png');
@@ -29,7 +30,7 @@ export class DataUser {
         this.submitButton.position(190, 700);
         this.submitButton.mousePressed(this.submitFormData.bind(this));
         this.hideInput();
-  
+        
   
     }
 
@@ -75,12 +76,9 @@ export class DataUser {
 
   submitFormData(DataUser) {
       const formUserData = {
-          id: DataUser.id,
           name: this.nameInput.value(),
           birthday: this.birthdayInput.value(),
           email: this.emailInput.value(),
-          score: DataUser,score,
-          color: DataUser.color
       };
 
       for(let key in formUserData) {
