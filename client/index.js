@@ -203,7 +203,3 @@ const app = p5 => {
 }
 
 new p5(app);
-
-
-  
-
