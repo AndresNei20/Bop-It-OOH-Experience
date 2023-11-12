@@ -54,6 +54,8 @@ const players = {
   }
 };
 
+let assigned = {};
+
 app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
@@ -61,12 +63,15 @@ app.get('/', (req, res) => {
 
 io.on('connect', (socket) => {
     console.log("Client connected:" );
-    playersConnected++;
+    
     console.log("players connected:", playersConnected)
 
-    let assigned = {};
+    socket.on('mupi-connected', () => {
+      console.log("mupi connected")
+    });
     
     socket.on('player-connected', () => {
+      playersConnected++;
       console.log("players connected:", playersConnected)
 
       if (!players.player1.id) {
@@ -83,12 +88,6 @@ io.on('connect', (socket) => {
       console.log('assigned', assigned)
       socket.emit('assigned', assigned);
 
-    });
-
-    
-
-    socket.on('mupi-connected', () => {
-      console.log("mupi connected")
     });
     
     socket.on('players-details', (data) => {
@@ -126,31 +125,38 @@ io.on('connect', (socket) => {
     })
 
     socket.on("disconnect", () => {
-        console.log("Client disconnected");
-        console.log('Usuario desconectado:', socket.id);
-        if (players.player1.id === socket.id) {
-          players.player1 =
-         {
-          id: 0,
-          name: "",
-          birthday: "",
-          email: "",
-          score: 0,
-          color: ""
-        }
-        }
-        
-        if (players.player2.id === socket.id) 
-        { players.player2 = {
-          id: 0,
-          name: "",
-          birthday: "",
-          email: "",
-          score: 0,
-          color: ""
-        }
-        };
-        io.emit('playersDetails', players);
-    })
+      console.log("Cliente desconectado:", socket.id);
+      if (players.player1.id === socket.id || players.player2.id === socket.id) {
+          // Aquí asumimos que si el ID coincide con player1 o player2, es un jugador
+          playersConnected--;
+          console.log("Jugador desconectado. Total de jugadores:", playersConnected);
+  
+          if (players.player1.id === socket.id) {
+            players.player1 =
+           {
+            id: 0,
+            name: "",
+            birthday: "",
+            email: "",
+            score: 0,
+            color: ""
+          }
+          }
+          
+          if (players.player2.id === socket.id) 
+          { players.player2 = {
+            id: 0,
+            name: "",
+            birthday: "",
+            email: "",
+            score: 0,
+            color: ""
+          }
+          };
+      } else {
+          console.log("Mupi desconectado");
+          // Código para manejar la desconexión del mupi...
+      }
+  });
 });
 
