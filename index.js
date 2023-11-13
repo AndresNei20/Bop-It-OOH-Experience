@@ -1,153 +1,198 @@
-import {io} from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
-import { Home } from './screens/Home';
-import { Main } from './screens/Main.js';
-import { DataUser } from './screens/DataUser.js';
-import {Scream} from './screens/scream.js'
-import { Shake } from './screens/Shake.js';
-import {WaitingPlayers} from './screens/waitingPlayers.js'
+const express = require('express');
+const http = require("http")
+const cors = require('cors');
+const PORT = 3000
 
-let currentScore = 0; //la idea es que sea global jaja
 
-const app = p5 => {
-  let home;
-  let main;
-  let dataUser;
-  let waitingPlayers;
-  let scream;
-  let shake;
-  let currentScreen;
-  let socket;  
-  let pressedFirst = false;  
+const app = express();
+app.use(cors())
+const server = http.createServer(app);;
 
-  let playerData = {
+server.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
+
+app.use('/mupi', express.static('mupi'))
+app.use('/player', express.static('client'))
+app.use(express.json())
+
+//Comportamiento del servidor
+const io = require('socket.io')(server, {
+  path: '/real-time',
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+let playersConnected = 0;
+let firstPressed = false;
+let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
+function randomColor() {
+  const index = Math.floor(Math.random() * colors.length);
+  return colors[index];
+}
+let currentColor = randomColor();
+
+const players = {
+  player1: {
+    id: 0,
     name: "",
     birthday: "",
     email: "",
-    score: 0
+    score: 0,
+    color: "",
+    isWaiting: false,
+  },
+  player2: {
+    id: 0,
+    name: "",
+    birthday: "",
+    email: "",
+    score: 0,
+    color: "",
+    isWaiting: false
+  }
 };
 
-  //Timer
-  let startingTime = 60;// el timer empezara desde 60 segundos
-  let lastUpdateTime = 0;
-  let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
-  let timeStarted = false; //indica si el temporizador ya esta activo
-  let timerVisible = true; // Controla la visibilidad del temporizador
+let assigned = {};
 
-  p5.setup = function() {
-    p5.createCanvas(414, 896);
+app.get('/', (req, res) => {
+  res.send('¡Hola Mundo!');
+});
+
+
+io.on('connect', (socket) => {
+    console.log("Client connected:" );
     
-    socket = io.connect('http://localhost:3000');
+    console.log("players connected:", playersConnected)
+
+    socket.on('mupi-connected', () => {
+      console.log("mupi connected")
+    });
     
-    home = new Home(p5);
-    home.setPlayCallback(() => {
-      currentScreen.hideInput();
-      currentScreen = dataUser;
-      currentScreen.showInput();
-      console.log("Cambiado a DataUser por clic en Play");
-    });
+    socket.on('player-connected', () => {
+      playersConnected++;
+      console.log("players connected:", playersConnected)
 
-    dataUser = new DataUser(p5);
-    dataUser.setSubmitCallback((userData) => {
-      console.log("Datos del usuario recibidos en index.js:", userData);
-      playerData = userData
-
-      currentScreen.hideInput();
-      currentScreen = waitingPlayers; 
-      currentScreen.showInput();
-    });
-
-    main = new Main(p5, socket, pressedFirst);
-    waitingPlayers = new WaitingPlayers(p5);
-    scream = new Scream(p5);
-    shake = new Shake(p5);
-    currentScreen = main; 
-    
-    //Timer init
-    lastUpdateTime = p5.millis(); // Inicializa el último tiempo de actualización
-
-    if (typeof window.DeviceOrientationEvent !== 'undefined') { //evento de orientación
-      window.addEventListener('deviceorientation', shake.handleShake, false);
-    }
-
-
-    socket.on('two-players-connected', () => {
-        console.log('Dos jugadores conectados. Cambiando a pantalla Main.');
-      
-        currentScreen.hideInput();
-        currentScreen = main;
-        currentScreen.showInput();
-      });
-
-    socket.on('other-player-pressed', (item) => {
-      console.log('Other player pressed the button first.');
-      pressedFirst = false;
-    });
-
-  
-  }
-  
-  p5.draw = function() {
-    p5.background(0);
-    currentScreen.show(p5);
-
-    if (currentScreen === main && !timeStarted) {
-      // Inicia el temporizador cuando currentScreen sea igual a main y no se haya iniciado antes
-      timeStarted = true;
-      console.log("Comienza el temporizador");
-    }
-
-    // Timer function 
-    if (timeStarted) {
-      const currentTime = p5.millis();
-      if (currentTime - lastUpdateTime >= 1000) {
-        // Actualiza el contador de tiempo cada segundo
-        if (currentDisplayTime > 0) {
-          currentDisplayTime -= 1;
-        } else {
-          console.log("¡Tiempo agotado!");
-          timerVisible = false; // Oculta el temporizador
-          timeStarted = false; // Detiene el temporizador
-          currentDisplayTime = 0; // Asegura que el tiempo sea 0
-        }
-        lastUpdateTime = currentTime;
+      if (!players.player1.id) {
+          players.player1.id = socket.id;
+          players.player1.color = "blue";
+          assigned = players.player1;
+      } else if (!players.player2.id) {
+          players.player2.id = socket.id;
+          players.player2.color = "red";
+          assigned = players.player2;
       }
-    }
 
-    //Timer
-    p5.fill(255, 230, 16);
-    p5.ellipse(210, 65, 90);
-    p5.textSize(35);
-    p5.textStyle("BOLD");
-    p5.stroke(10)
-    p5.fill(0);
-    const displayTime = p5.int(currentDisplayTime);
-    p5.text(displayTime, 191, 77);
+      // Envía el nombre asignado al cliente
+      console.log('assigned', assigned)
+      socket.emit('assigned', assigned);
+      console.log(players)
 
-    //Score
+    });
     
-    p5.textSize(28);//shake
-    p5.fill(255);//shake
-    p5.text(`Score: ${playerData.score}`, 150, 150);//shake
+    socket.on('players-details', (data) => {
+      if (data.id == players.player1.id) {
+        players.player1 = data;
+      } else if(data.id == players.player2.id) {
+        players.player2 = data;
+      }
 
+      console.log("Players: ", players)
+      io.emit('players-data', players);
+    })
 
+    socket.on('players-waiting', () => {
+      
+      console.log("Jugador esperando:", socket.id);
+      
   
+      if (players.player1.id === socket.id) {
+          players.player1.isWaiting = true;
+      } else if (players.player2.id === socket.id) {
+          players.player2.isWaiting = true;
+      }
+  
+      checkIfBothPlayersAreWaiting();
+  });
+
+  socket.on('waiting-screen', () => {
+    io.emit("screen-change");
+  });
+
+    socket.on("generate-new-color", () => { // Escuchar una solicitud de un nuevo color
+      currentColor = randomColor(); // Generar un nuevo color
+      io.emit('color', currentColor); // Emitir el nuevo color a todos los clientes conectados
+    });
+
+    socket.on("send-item", (user) => {
+        if (!firstPressed) {
+            firstPressed = true;
+            io.emit('first-player-pressed', user.name); // Emitir a todos los jugadores
+        }
+        
+        console.log(user.name, user.score)
+        socket.broadcast.emit("other-player-pressed", user.name);
+    })
+
+    socket.on('updateScore', (winner) => {
+        io.emit('update-score-player', winner);
+    
+      
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Cliente desconectado:", socket.id);
+      if (players.player1.id === socket.id || players.player2.id === socket.id) { 
+          if (players.player1.id === socket.id) {
+            players.player1 =
+           {
+            id: 0,
+            name: "",
+            birthday: "",
+            email: "",
+            score: 0,
+            color: "",
+            isWaiting: false,
+          }
+          }
+          
+          if (players.player2.id === socket.id) 
+          { players.player2 = {
+            id: 0,
+            name: "",
+            birthday: "",
+            email: "",
+            score: 0,
+            color: "",
+            isWaiting: false,
+          }
+          };
+
+          playersConnected--;
+          console.log("Jugador desconectado. Total de jugadores:", playersConnected);
+      } else {
+          console.log("Mupi desconectado");
+          // Código para manejar la desconexión del mupi...
+      }
+  });
+});
+
+function checkIfBothPlayersAreWaiting() {
+  if (players.player1.isWaiting && players.player2.isWaiting) {
+
+      setTimeout(() => {
+        io.emit('go-to-main-screen');
+        io.emit('start-timer');
+        io.emit('color', currentColor);
+      }, 3000);
+      
+
+      // Restablecer el estado de espera
+      players.player1.isWaiting = false;
+      players.player2.isWaiting = false;
+      console.log("Ambos jugadores están esperando. Iniciando partida...");
   }
-
-
-
-  p5.mousePressed = function () {
-    currentScreen.mousePressed(pressedFirst, playerData);
-
-    // Enviar los datos del usuario al servidor
-    if (currentScreen === main && pressedFirst) {
-      socket.emit('send-item', user);
-    }
-  }
-
 }
-
-new p5(app);
-
-
-  
 

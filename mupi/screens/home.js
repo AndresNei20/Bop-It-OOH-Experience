@@ -9,23 +9,9 @@ export class Home {
         this.yellowTriangle = this.p5.loadImage('img/yellow_triangle.png');
         
         this.arrow = this.p5.loadImage('img/arrow.png');
-        this.playButton = this.p5.createButton('Play Now');
-        this.playButton.position(180, 700);
-        this.playButton.mousePressed(this.handlePlayPressed.bind(this));
-
-        this.hideInput();
 
     }
 
-    setPlayCallback(callback) {
-      this.playCallback = callback;
-    }
-
-    handlePlayPressed() {
-        if (this.playCallback) {
-            this.playCallback();
-        }
-    }
   
     show(p5) {
       p5.background('black');
@@ -37,20 +23,6 @@ export class Home {
       p5.image(this.yellowTriangle, 320, 30);
       p5.image(this.arrow, 150, 500);
 
-      this.playButton.show();
-
-    
-  }
-
-  hideInput(){
-    this.playButton.hide();
-  }
-
-  showInput(){
-    this.playButton.show();
-  }
-
-  mousePressed(){
     
   }
 
