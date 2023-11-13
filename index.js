@@ -130,11 +130,21 @@ io.on('connect', (socket) => {
     socket.on("send-item", (user) => {
         if (!firstPressed) {
             firstPressed = true;
-            io.emit('first-player-pressed', user); // Emitir a todos los jugadores
+            io.emit('first-player-pressed', user.name); // Emitir a todos los jugadores
         }
-        console.log('User pressed:', user);
-        socket.broadcast.emit("other-player-pressed", user);
+        io.emit('updateScore')
+        console.log(user.name, user.score)
+        socket.broadcast.emit("other-player-pressed", user.name);
     })
+
+    socket.on('updateScore', (winner) => {
+      if(players.player1.id == winner.id){
+        players.player1 = winner
+      } else if(players.player2.id == winner.id){
+        players.player2 = winner
+      }
+      console.log(players)
+    });
 
     socket.on("disconnect", () => {
       console.log("Cliente desconectado:", socket.id);

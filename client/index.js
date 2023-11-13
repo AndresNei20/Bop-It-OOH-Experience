@@ -149,6 +149,17 @@ const app = p5 => {
     socket.on('other-player-pressed', (item) => {
         console.log('Other player pressed the button first.');
     }); 
+
+    socket.on('updateScore', (winnerPlayer) => {
+      // Suponiendo que `player` y `opponent` son objetos que contienen las propiedades `id` y `score`.
+      if (winnerPlayer.id === players.player1.id) {
+          // Actualiza el puntaje del jugador local en la interfaz
+          players.player1.score = winnerPlayer.score;
+      } else if (winnerPlayer.id === players.player2.id) {
+          // Actualiza el puntaje del oponente en la interfaz
+          players.player2.score = winnerPlayer.score;
+      }
+  });
     
   
   }
