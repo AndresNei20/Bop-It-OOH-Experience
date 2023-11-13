@@ -1,4 +1,4 @@
-import {io} from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
+import {io} from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 import {Players} from './screens/playersScreen.js'
 import {Instructions} from './screens/instruction.js'
 import { Score } from './screens/score.js';
@@ -60,6 +60,18 @@ const app = p5 => {
 
         socket.on('players-data', (data) => {
           players = data
+          console.log(players)
+
+        });
+
+        socket.on('update-score-player', (winner) => {
+          if(players.player1.id == winner.id){
+            players.player1.score = winner.score
+            console.log("score", players.player1.score)
+          } else if (players.player2.id == winner.id) {
+            players.player2.score = winner.score
+            console.log("score", players.player2.score)
+          }
           console.log(players)
 
         });
@@ -152,6 +164,8 @@ const app = p5 => {
     }
 
     if(currentScreen == scoreScreen){
+
+
 
       
       p5.textSize(20);

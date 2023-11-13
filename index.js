@@ -1,6 +1,5 @@
 const express = require('express');
 const http = require("http")
-const socketIO = require('socket.io');
 const cors = require('cors');
 const PORT = 3000
 
@@ -132,18 +131,15 @@ io.on('connect', (socket) => {
             firstPressed = true;
             io.emit('first-player-pressed', user.name); // Emitir a todos los jugadores
         }
-        io.emit('updateScore')
+        
         console.log(user.name, user.score)
         socket.broadcast.emit("other-player-pressed", user.name);
     })
 
     socket.on('updateScore', (winner) => {
-      if(players.player1.id == winner.id){
-        players.player1 = winner
-      } else if(players.player2.id == winner.id){
-        players.player2 = winner
-      }
-      console.log(players)
+        io.emit('update-score-player', winner);
+    
+      
     });
 
     socket.on("disconnect", () => {
