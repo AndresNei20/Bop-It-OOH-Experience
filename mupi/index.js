@@ -3,7 +3,28 @@ import {Players} from './screens/playersScreen.js'
 import {Instructions} from './screens/instruction.js'
 import { Score } from './screens/score.js';
 import { Go } from './screens/go.js';
+import { Home } from './screens/home.js';
 
+let players = {
+  player1: {
+    id: 0,
+    name: "",
+    birthday: "",
+    email: "",
+    score: 0,
+    color: "",
+    isWaiting: false,
+  },
+  player2: {
+    id: 0,
+    name: "",
+    birthday: "",
+    email: "",
+    score: 0,
+    color: "",
+    isWaiting: false
+  }
+};
 
 const app = p5 => {
     let scoreScreen;
@@ -13,20 +34,7 @@ const app = p5 => {
     let currentScreen;
     let socket; 
     let currentColor;
-
-    let player1 = {
-        name: "",
-        birthday: "",
-        email: "",
-        score: 0
-    };
-
-    let player2 = {
-        name: "",
-        birthday: "",
-        email: "",
-        score: 0
-    };
+    let home;
 
     //Timer
     let startingTime = 60;// el timer empezara desde 60 segundos
@@ -42,16 +50,28 @@ const app = p5 => {
         socket = io.connect('http://localhost:3000', {path: '/real-time'});
         socket.emit("mupi-connected");
 
+        home = new Home(p5)
         go = new Go(p5);
         instructions = new Instructions(p5);
         playersScreen = new Players(p5);
         scoreScreen = new Score(p5);
 
-        currentScreen = scoreScreen; 
+        currentScreen = home; 
+
+        socket.on('players-data', (data) => {
+          players = data
+          console.log(players)
+
+        });
+
+        socket.on('waiting-screen', () => {
+          currentScreen = playersScreen;
+
+        });
 
         socket.on('go-to-main-screen', () => {
             currentScreen = scoreScreen;
-          // Aquí puedes agregar cualquier otra lógica necesaria para cambiar de pantalla.
+
         });
       
         socket.on('start-timer', () => {
@@ -79,7 +99,7 @@ const app = p5 => {
     
     p5.draw = function() {
       p5.background(0);
-      currentScreen.show(p5, player1, player2);
+      currentScreen.show(p5, players);
 
     // Timer function 
     if (timeStarted) {
@@ -93,12 +113,13 @@ const app = p5 => {
              p5.stroke(10)
              p5.fill(0);
              const displayTime = p5.int(currentDisplayTime);
-             p5.text(displayTime, p5.width / 2 - 26, 95);
+             p5.text(displayTime, p5.width / 2 + 25, 95);
        
              //Instruction
              p5.textSize(30);
+             p5.fill('white')
              p5.fill(255);
-             p5.text(`Press the ${currentColor} button`, p5.width / 2 - 180, 180);
+             p5.text(`Press the ${currentColor} button`, p5.width / 2 + 180, 180);
 
 
       if (currentTime - lastUpdateTime >= 1000) {
@@ -113,6 +134,53 @@ const app = p5 => {
         }
         lastUpdateTime = currentTime;
       }
+    }
+
+    if(currentScreen == playersScreen){
+      
+      // Ajusta la posición horizontal para que el texto esté más a la izquierda
+      const playerOneTextX = 90 + 10;
+      // Ajusta la posición vertical para centrar el texto dentro de la caja
+      const playerOneTextY = 267 + 45 / 2;
+      p5.text(`${players.player1.name} `, playerOneTextX, playerOneTextY);
+
+      // Ajusta la posición horizontal para que el texto esté más a la izquierda
+      const playerTwoTextX = 90 + 10;
+      // Ajusta la posición vertical para centrar el texto dentro de la caja
+      const playerTwoTextY = 417 + 45 / 2;
+      p5.text(`${players.player2.name} `, playerTwoTextX, playerTwoTextY);
+    }
+
+    if(currentScreen == scoreScreen){
+
+      
+      p5.textSize(20);
+      // Nombre del jugador 1 (centrado) con color personalizado
+      p5.stroke(`${players.player1.color} `); // Color del trazo
+      p5.strokeWeight(1);
+      p5.textAlign(p5.CENTER, p5.CENTER);
+      p5.fill(`${players.player1.color} `); // Aplica el color personalizado a JohnDoe
+      p5.text(`${players.player1.name} `, p5.width / 2, 370);
+
+      // Puntuación de jugador 1 (alineada a la derecha)
+      p5.textAlign(p5.LEFT, p5.LEFT);
+      p5.noStroke(); // Elimina el trazo para la puntuación
+      p5.fill('white'); // Restablece el color predeterminado para la puntuación
+      p5.text(`${players.player1.score} ` + " pts", p5.width / 2 + 140, 370);
+
+      // Nombre del jugador 2 (centrado) con color personalizado
+      p5.stroke(`${players.player2.color} `); // Color del trazo
+      p5.strokeWeight(1);
+      p5.textAlign(p5.CENTER, p5.CENTER);
+      p5.fill(`${players.player2.color} `); // Aplica el color personalizado al nombre de Player 2
+      p5.text(`${players.player2.name} `, p5.width / 2, 460);
+
+      // Puntuación de jugador 2 (alineada a la derecha)
+      p5.textAlign(p5.LEFT, p5.LEFT);
+      p5.noStroke(); // Elimina el trazo para la puntuación de "Player 2"
+      p5.fill('white'); // Restablece el color predeterminado para la puntuación
+      p5.text(`${players.player2.score} ` + " pts", p5.width / 2 + 140, 460);
+
     }
      
     }

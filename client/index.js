@@ -39,7 +39,7 @@ const app = p5 => {
   
 
   //Timer
-  let startingTime = 10;// el timer empezara desde 60 segundos
+  let startingTime = 60;// el timer empezara desde 60 segundos
   let lastUpdateTime = 0;
   let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
   let timeStarted = false; //indica si el temporizador ya esta activo
@@ -78,6 +78,7 @@ const app = p5 => {
       if (currentScreen === waitingPlayers) {
         socket.emit('players-details', playerData)
         socket.emit('players-waiting');
+        socket.emit('waiting-screen');
       }
     });
     

@@ -101,10 +101,13 @@ io.on('connect', (socket) => {
       }
 
       console.log("Players: ", players)
+      io.emit('players-data', players);
     })
 
     socket.on('players-waiting', () => {
+      
       console.log("Jugador esperando:", socket.id);
+      
   
       if (players.player1.id === socket.id) {
           players.player1.isWaiting = true;
@@ -168,9 +171,13 @@ io.on('connect', (socket) => {
 
 function checkIfBothPlayersAreWaiting() {
   if (players.player1.isWaiting && players.player2.isWaiting) {
-      io.emit('go-to-main-screen');
-      io.emit('start-timer');
-      io.emit('color', currentColor);
+
+      setTimeout(() => {
+        io.emit('go-to-main-screen');
+        io.emit('start-timer');
+        io.emit('color', currentColor);
+      }, 3000);
+      
 
       // Restablecer el estado de espera
       players.player1.isWaiting = false;

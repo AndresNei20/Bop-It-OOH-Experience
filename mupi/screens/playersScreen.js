@@ -6,10 +6,10 @@ export class Players {
         this.textStrokeColor = 'yellow'; 
         this.titleSize = 40;
         this.textSize = 25;
-        this.playerOneColor = 'orange';
-        this.playerTwoColor = 'lightblue';
-        this.borderColorPlayerOne = 'orange'; // Color del borde del recuadro de Player 1
-        this.borderColorPlayerTwo = 'lightblue'; // Color del borde del recuadro de Player 2
+        this.playerOneColor = 'blue';
+        this.playerTwoColor = 'red';
+        this.borderColorPlayerOne = 'blue'; // Color del borde del recuadro de Player 1
+        this.borderColorPlayerTwo = 'red'; // Color del borde del recuadro de Player 2
         this.borderWidth = 3; // Grosor del borde del recuadro
         this.borderRadius = 10; // Radio de borde para hacerlo redondeado
         this.boxPadding = 10; // Espaciado alrededor del texto dentro del recuadro
@@ -69,11 +69,7 @@ export class Players {
         p5.fill(this.borderColorPlayerOne);
         p5.noStroke();
         p5.fill(this.textColor); // Configura el color del texto dentro de la caja
-        // Ajusta la posición horizontal para que el texto esté más a la izquierda
-        const playerOneTextX = playerOneBoxX + this.boxPadding;
-        // Ajusta la posición vertical para centrar el texto dentro de la caja
-        const playerOneTextY = playerOneBoxY + playerOneBoxHeight / 2;
-        p5.text(this.textPlayerOne, playerOneTextX, playerOneTextY);
+        
 
         // Dibuja un recuadro con bordes redondeados debajo de Player 2
         const playerTwoBoxX = subtitleX - this.boxPadding; // Ajusta la posición horizontal del recuadro
@@ -86,10 +82,7 @@ export class Players {
         p5.fill(this.borderColorPlayerTwo);
         p5.noStroke();
         p5.fill(this.textColor); // Configura el color del texto dentro de la caja
-        // Ajusta la posición horizontal para que el texto esté más a la izquierda
-        const playerTwoTextX = playerTwoBoxX + this.boxPadding;
-        // Ajusta la posición vertical para centrar el texto dentro de la caja
-        const playerTwoTextY = playerTwoBoxY + playerTwoBoxHeight / 2;
-        p5.text(this.textPlayerTwo, playerTwoTextX, playerTwoTextY);
+
+
     }
 }
