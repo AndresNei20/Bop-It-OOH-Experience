@@ -64,7 +64,7 @@ const app = p5 => {
 
         });
 
-        socket.on('waiting-screen', () => {
+        socket.on('screen-change', () => {
           currentScreen = playersScreen;
 
         });

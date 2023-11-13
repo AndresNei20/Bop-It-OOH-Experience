@@ -118,6 +118,10 @@ io.on('connect', (socket) => {
       checkIfBothPlayersAreWaiting();
   });
 
+  socket.on('waiting-screen', () => {
+    io.emit("screen-change");
+  });
+
     socket.on("generate-new-color", () => { // Escuchar una solicitud de un nuevo color
       currentColor = randomColor(); // Generar un nuevo color
       io.emit('color', currentColor); // Emitir el nuevo color a todos los clientes conectados
