@@ -26,6 +26,7 @@ const app = p5 => {
   let score; 
   let currentColor;
   let pressedFirst = false;  
+  let pressedBtn = false
 
   let playerData = {
     id: 0,
@@ -85,7 +86,7 @@ const app = p5 => {
     
     waitingPlayers = new WaitingPlayers(p5);
     
-    main = new Main(p5, socket, pressedFirst);
+    main = new Main(p5, socket, pressedFirst, pressedBtn);
     
     scream = new Scream(p5);
     shake = new Shake(p5);
@@ -159,6 +160,23 @@ const app = p5 => {
           // Actualiza el puntaje del oponente en la interfaz
           players.player2.score = winnerPlayer.score;
       }
+
+      socket.on('pressed',(player) => {
+        console.log("Entrando en pressed")
+        if(currentColor == 'button' && !this.pressedFirst){
+          if(player == playerData.color){
+            console.log(player)
+            this.pressedFirst = true;
+            playerData.score += 100; 
+            
+            this.socket.emit('send-item', playerData);
+            this.socket.emit('updateScore', playerData)
+            this.socket.emit('generate-new-color');
+            this.pressedFirst = false;
+        } 
+        }
+        
+      })
   });
     
   

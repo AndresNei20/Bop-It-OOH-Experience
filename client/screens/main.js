@@ -56,7 +56,7 @@ export class Main {
     mousePressed(playerData, currentColor) {
         const shapePressed = this.mouseIsOverShape();
 
-        if (shapePressed === currentColor && !this.pressedFirst) {
+        if (shapePressed === currentColor && !this.pressedFirst && currentColor != "button") {
             console.log('Correct button pressed!');
             this.pressedFirst = true;
             playerData.score += 100; 

@@ -2,11 +2,34 @@ const express = require('express');
 const http = require("http")
 const cors = require('cors');
 const PORT = 3000
+const {SerialPort} = require('serialport');
+const {ReadlineParser} = require('@serialport/parser-readline');
 
 
 const app = express();
 app.use(cors())
 const server = http.createServer(app);;
+
+//ArduANO
+
+const protocolConfiguration = {
+  path: 'COM3',
+  baudRate: 9600
+}
+
+const port = new SerialPort(protocolConfiguration);
+const parser = port.pipe(new ReadlineParser());
+
+
+parser.on('data', (data) => {
+  console.log("data", data);
+  io.emit('pressed', data);
+});
+
+SerialPort.list().then(
+  ports => ports.forEach(port => console.log(port.path)), //COM3
+  err => console.log(err)
+)
 
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
@@ -27,7 +50,7 @@ const io = require('socket.io')(server, {
 
 let playersConnected = 0;
 let firstPressed = false;
-let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
+let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button'];
 function randomColor() {
   const index = Math.floor(Math.random() * colors.length);
   return colors[index];
