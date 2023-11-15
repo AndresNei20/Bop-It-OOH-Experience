@@ -28,7 +28,8 @@ export class DataUser {
 
         this.submitButton = this.p5.createButton('Enviar');
         this.submitButton.position(190, 700);
-        this.submitButton.mousePressed(this.submitFormData.bind(this));
+        this.submitButton.mousePressed(this.submitFormData.bind(this))
+        this.submitButton.style('backgorund-color', '#FFE610'); // Set background color
         this.hideInput();
         
   
@@ -64,7 +65,9 @@ export class DataUser {
       p5.text('Nombre', 120, 380);
       p5.text('Birthday', 120,480);
       p5.text('Email', 120,580 );
-
+      
+      
+      
   
 
     

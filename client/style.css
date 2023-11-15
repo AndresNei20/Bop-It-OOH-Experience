@@ -7,3 +7,23 @@
 body{
     margin: 0;
 }
+
+* {font-family: 'Russo One', sans-serif;}
+
+input {
+    border-radius: 10px;
+    background-color: black;
+    border-color: FFE610;
+    height: 35px;
+   
+    
+}
+
+ button{
+    background-color:FFE610;
+    color: black; 
+    padding: '10px 20px'; 
+    font-size: 20px;
+    border: none;
+    
+}
