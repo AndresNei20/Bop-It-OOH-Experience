@@ -160,24 +160,29 @@ const app = p5 => {
           // Actualiza el puntaje del oponente en la interfaz
           players.player2.score = winnerPlayer.score;
       }
-
-      socket.on('pressed',(player) => {
-        console.log("Entrando en pressed")
-        if(currentColor == 'button' && !this.pressedFirst){
-          if(player == playerData.color){
-            console.log(player)
-            this.pressedFirst = true;
-            playerData.score += 100; 
-            
-            this.socket.emit('send-item', playerData);
-            this.socket.emit('updateScore', playerData)
-            this.socket.emit('generate-new-color');
-            this.pressedFirst = false;
-        } 
-        }
-        
-      })
   });
+
+  socket.on('pressed', (data) => {
+    console.log("llega la data:" + data)
+    
+    console.log("boton presionado", data)
+    if (currentColor == 'button') {
+      console.log("Entra en la instrucción")
+      console.log("Estoy comparando " + playerData.color + "con " + data)
+      console.log(typeof playerData.color)
+      console.log(typeof data)
+      if(playerData.color != data){
+        console.log("PlayerData.color igual a data")
+        playerData.score += 100;
+        socket.emit('send-item', playerData);
+        socket.emit('updateScore', playerData);
+        socket.emit('generate-new-color');
+      } else {
+        console.log("Other player pressed first the button")
+      }
+      
+    }
+  })
     
   
   }

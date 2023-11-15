@@ -21,10 +21,6 @@ const port = new SerialPort(protocolConfiguration);
 const parser = port.pipe(new ReadlineParser());
 
 
-parser.on('data', (data) => {
-  console.log("data", data);
-  io.emit('pressed', data);
-});
 
 SerialPort.list().then(
   ports => ports.forEach(port => console.log(port.path)), //COM3
@@ -47,6 +43,8 @@ const io = require('socket.io')(server, {
     methods: ["GET", "POST"]
   }
 });
+
+
 
 let playersConnected = 0;
 let firstPressed = false;
@@ -84,6 +82,10 @@ app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
 
+parser.on('data', (data) => {
+  console.log("data", data);
+  io.emit('pressed', data);
+});
 
 io.on('connect', (socket) => {
     console.log("Client connected:" );
@@ -92,6 +94,11 @@ io.on('connect', (socket) => {
 
     socket.on('mupi-connected', () => {
       console.log("mupi connected")
+    });
+
+    parser.on('data', (data) => {
+      console.log("this is my data", data);
+      socket.emit('pressed', data);
     });
     
     socket.on('player-connected', () => {
