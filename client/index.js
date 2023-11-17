@@ -114,7 +114,7 @@ const app = p5 => {
       console.log("Cambiado a score por clic en see results");
     });
 
-    currentScreen = home; 
+    currentScreen = dataUser; 
 
     socket.on('assigned', (playerAsig) => {
       playerData = playerAsig;
