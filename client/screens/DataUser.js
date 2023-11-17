@@ -14,20 +14,21 @@ export class DataUser {
         this.nameInput.position(120, 400);
         this.nameInput.size(200);
 
-
-    
         this.birthdayInput = this.p5.createInput('');
         this.birthdayInput.position(120, 500);
         this.birthdayInput.size(200);
 
-    
         this.emailInput = this.p5.createInput('');
         this.emailInput.position(120, 600);
         this.emailInput.size(200);
 
-
         this.submitButton = this.p5.createButton('Enviar');
-        this.submitButton.position(190, 700);
+        this.submitButton.position(180, 700);
+        this.submitButton.style('background-color', 'FFE610');
+        this.submitButton.style('color', '3E0A5D');
+        this.submitButton.style('padding', '10px 20px'); // Agrega un poco de padding para que sea más grande
+        this.submitButton.style('border', 'none'); // Elimina el borde
+        this.submitButton.style('border-radius', '5px'); 
         this.submitButton.mousePressed(this.submitFormData.bind(this));
         this.hideInput();
         
@@ -61,12 +62,9 @@ export class DataUser {
       p5.textSize(20);
       p5.fill(250);
 
-      p5.text('Nombre', 120, 380);
+      p5.text('Name', 120, 380);
       p5.text('Birthday', 120,480);
       p5.text('Email', 120,580 );
-
-  
-
     
   }
 
@@ -89,13 +87,11 @@ export class DataUser {
     }
 
       console.log(formUserData);
-
+      
       if (this.submitCallback) {
           this.submitCallback(formUserData);
       }
-
   }
-
 
   mousePressed(){
 

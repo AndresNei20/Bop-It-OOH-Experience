@@ -90,6 +90,7 @@ const app = p5 => {
     
     scream = new Scream(p5);
     shake = new Shake(p5);
+    cupon = new Cupon(p5);
 
     winner = new Winner(p5);
     winner.setNextCallback(() => {
@@ -115,7 +116,7 @@ const app = p5 => {
       console.log("Cambiado a score por clic en see results");
     });
 
-    currentScreen = winner; 
+    currentScreen = home; 
 
     socket.on('assigned', (playerAsig) => {
       playerData = playerAsig;
@@ -257,30 +258,26 @@ const app = p5 => {
 
     
     if(currentScreen == score){
-      
+      let yOffsetCircle = 50; // Ajuste vertical para el círculo
+      let yOffsetPoints = 50; // Ajuste vertical para los puntos
+      let yOffsetRest = 100; // Ajuste vertical para el resto de elementos
       //Score
-      p5.textSize(45);
-      p5.fill(255);
-      p5.stroke(10, 250)
-      p5.text(`${playerData.score}`, 160, 240);
+      p5.textAlign(p5.CENTER, p5.CENTER);
+      p5.textSize(32);
+      p5.text(`${playerData.score}\nPoints`, p5.width / 2, 100 + yOffsetPoints);
 
-
-      p5.textSize(30);
-      p5.fill(250);
-      p5.text(`${playerData.name}`, 140, 395);
+      // Resto del contenido
+      p5.textSize(24);
+      p5.text(`Crazy Score\n${playerData.name}\nCongratulations!`, p5.width / 2, 250 + yOffsetRest);
     }
 
-  
   }
-
-
 
   p5.mousePressed = function () {
     currentScreen.mousePressed(playerData, currentColor);
     pressedFirst = main.getPressedFirstStatus();
 
   }
-
 }
 
 new p5(app);

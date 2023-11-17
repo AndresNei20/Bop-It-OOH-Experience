@@ -10,7 +10,12 @@ export class Home {
       
       this.arrow = this.p5.loadImage('img/arrow.png');
       this.playButton = this.p5.createButton('Play Now');
-      this.playButton.position(180, 700);
+      this.playButton.position(160, 700);
+      this.playButton.style('background-color', 'FFE610');
+      this.playButton.style('color', '3E0A5D');
+      this.playButton.style('padding', '10px 20px'); // Agrega un poco de padding para que sea más grande
+      this.playButton.style('border', 'none'); // Elimina el borde
+      this.playButton.style('border-radius', '5px'); 
       this.playButton.mousePressed(this.handlePlayPressed.bind(this));
 
       this.hideInput();
