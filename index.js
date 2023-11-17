@@ -20,12 +20,6 @@ const protocolConfiguration = {
 const port = new SerialPort(protocolConfiguration);
 const parser = port.pipe(new ReadlineParser());
 
-
-parser.on('data', (data) => {
-  console.log("data", data);
-  io.emit('input', data);
-});
-
 SerialPort.list().then(
   ports => ports.forEach(port => console.log(port.path)), //COM3
   err => console.log(err)
@@ -50,6 +44,7 @@ const io = require('socket.io')(server, {
 
 let playersConnected = 0;
 let firstPressed = false;
+/* let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button']; */
 let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
 function randomColor() {
   const index = Math.floor(Math.random() * colors.length);
@@ -84,6 +79,10 @@ app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
 
+parser.on('data', (data) => {
+  console.log("data", data);
+  io.emit('pressed', data);
+});
 
 io.on('connect', (socket) => {
     console.log("Client connected:" );
@@ -92,6 +91,11 @@ io.on('connect', (socket) => {
 
     socket.on('mupi-connected', () => {
       console.log("mupi connected")
+    });
+
+    parser.on('data', (data) => {
+      console.log("this is my data", data);
+      socket.emit('pressed', data);
     });
     
     socket.on('player-connected', () => {
@@ -129,8 +133,6 @@ io.on('connect', (socket) => {
     socket.on('players-waiting', () => {
       
       console.log("Jugador esperando:", socket.id);
-      
-  
       if (players.player1.id === socket.id) {
           players.player1.isWaiting = true;
       } else if (players.player2.id === socket.id) {
@@ -138,11 +140,11 @@ io.on('connect', (socket) => {
       }
   
       checkIfBothPlayersAreWaiting();
-  });
+    });
 
-  socket.on('waiting-screen', () => {
-    io.emit("screen-change");
-  });
+    socket.on('waiting-screen', () => {
+      io.emit("screen-change");
+    });
 
     socket.on("generate-new-color", () => { // Escuchar una solicitud de un nuevo color
       currentColor = randomColor(); // Generar un nuevo color
@@ -162,7 +164,6 @@ io.on('connect', (socket) => {
     socket.on('updateScore', (winner) => {
         io.emit('update-score-player', winner);
     
-      
     });
 
     socket.on('calculate-winner', ()=>{

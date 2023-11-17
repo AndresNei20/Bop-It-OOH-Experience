@@ -1,4 +1,3 @@
-
 export class Main {
     constructor(p5, socket, pressedFirst) {
         this.p5 = p5;
@@ -8,7 +7,6 @@ export class Main {
         this.pressedFirst = false;
         this.socket = socket;
         this.pressedFirst = pressedFirst;
-    
     }
 
     isOverCircle(x, y, r) {
@@ -56,13 +54,13 @@ export class Main {
     mousePressed(playerData, currentColor) {
         const shapePressed = this.mouseIsOverShape();
 
-        if (shapePressed === currentColor && !this.pressedFirst) {
+        if (shapePressed === currentColor && !this.pressedFirst && currentColor != "button") {
             console.log('Correct button pressed!');
             this.pressedFirst = true;
             playerData.score += 100; 
             
             this.socket.emit('send-item', playerData);
-            this.socket.emit('updateScore', playerData);
+            this.socket.emit('updateScore', playerData)
             this.socket.emit('generate-new-color');
             this.pressedFirst = false;
         } 
@@ -107,11 +105,7 @@ export class Main {
         p5.fill(89, 20, 179);
         p5.ellipse(210, 500, 240);
 
-        p5.image(this.bopItImg, 90,420, 250, 168.75)
-        
-        
-
-        
+        p5.image(this.bopItImg, 90,420, 250, 168.75)  
     }
 
     hideInput(){
@@ -120,5 +114,4 @@ export class Main {
     showInput(){
        
     }
-
 }
