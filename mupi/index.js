@@ -74,7 +74,7 @@ const app = p5 => {
         winnerScreen = new Winner(p5);
         endingScreen = new Ending(p5);
 
-        currentScreen = home; 
+        currentScreen = winnerScreen; 
 
         socket.on('players-data', (data) => {
           players = data
@@ -219,13 +219,7 @@ const app = p5 => {
       p5.strokeWeight(1);
       p5.textAlign(p5.CENTER, p5.CENTER);
       p5.fill(`${winnerPlayer.color} `); // Aplica el color personalizado a JohnDoe
-      p5.text(`${winnerPlayer.name} `, p5.width / 2, 370);
-
-      // Puntuación de jugador 1 (alineada a la derecha)
-      p5.textAlign(p5.LEFT, p5.LEFT);
-      p5.noStroke(); // Elimina el trazo para la puntuación
-      p5.fill('white'); // Restablece el color predeterminado para la puntuación
-      p5.text(`${winnerPlayer.score} ` + " pts", p5.width / 2 + 140, 370);
+      p5.text(`${winnerPlayer.name} `, p5.width / 2, 420);
       
     }
 
