@@ -62,7 +62,7 @@ export class Main {
             playerData.score += 100; 
             
             this.socket.emit('send-item', playerData);
-            this.socket.emit('updateScore', playerData)
+            this.socket.emit('updateScore', playerData);
             this.socket.emit('generate-new-color');
             this.pressedFirst = false;
         } 

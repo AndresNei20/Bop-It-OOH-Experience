@@ -1,5 +1,3 @@
-import { WaitingPlayers } from "./waitingPlayers";
-
 export class Score {
 
     constructor(p5) {
@@ -22,7 +20,7 @@ export class Score {
           }
     }
 
-    show(p5, playerData){
+    show(p5){
         p5.background('black');
         p5.image(this.bolitas, 30, 100);
 

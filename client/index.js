@@ -25,7 +25,8 @@ const app = p5 => {
   let socket; 
   let score; 
   let currentColor;
-  let pressedFirst = false;  
+  let pressedFirst = false;
+  let winnerPlayer = "";  
 
   let playerData = {
     id: 0,
@@ -39,7 +40,7 @@ const app = p5 => {
   
 
   //Timer
-  let startingTime = 60;// el timer empezara desde 60 segundos
+  let startingTime = 10;// el timer empezara desde 60 segundos
   let lastUpdateTime = 0;
   let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
   let timeStarted = false; //indica si el temporizador ya esta activo
@@ -159,7 +160,19 @@ const app = p5 => {
           // Actualiza el puntaje del oponente en la interfaz
           players.player2.score = winnerPlayer.score;
       }
-  });
+    });
+
+    socket.on('winner', (winner) =>{
+      
+      winnerPlayer = winner
+      console.log("Winner", winnerPlayer)
+      if(playerData.color != winner){
+        console.log("I am a loser")
+      } else {
+        console.log("I am a winner")
+      }
+    })
+
     
   
   }
@@ -199,10 +212,24 @@ const app = p5 => {
         } else {
           console.log("¡Tiempo agotado!");
           socket.emit('players-details', playerData)
+          socket.emit('calculate-winner')
           timerVisible = false; // Oculta el temporizador
           timeStarted = false; // Detiene el temporizador
           currentDisplayTime = 0; // Asegura que el tiempo sea 0
-          currentScreen = winner;
+          console.log("Antes de cambiar a winner/loser")
+          console.log("Estoy comparando " + winnerPlayer + "con " + playerData.color)
+          setTimeout(() => {
+            if(winnerPlayer == playerData.color){
+            currentScreen = winner;
+            console.log("entro a winner porque winner es " + winnerPlayer)
+          }else {
+            console.log("entro a loser porque winner es:" + winnerPlayer)
+            currentScreen = loser;
+          }
+          console.log("currentscreen:", currentScreen)
+          }, 100);
+          
+          
         }
         lastUpdateTime = currentTime;
       }

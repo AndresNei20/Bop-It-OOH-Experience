@@ -2,11 +2,34 @@ const express = require('express');
 const http = require("http")
 const cors = require('cors');
 const PORT = 3000
+const {SerialPort} = require('serialport');
+const {ReadlineParser} = require('@serialport/parser-readline');
 
 
 const app = express();
 app.use(cors())
 const server = http.createServer(app);;
+
+//ArduANO
+
+const protocolConfiguration = {
+  path: 'COM3',
+  baudRate: 9600
+}
+
+const port = new SerialPort(protocolConfiguration);
+const parser = port.pipe(new ReadlineParser());
+
+
+parser.on('data', (data) => {
+  console.log("data", data);
+  io.emit('input', data);
+});
+
+SerialPort.list().then(
+  ports => ports.forEach(port => console.log(port.path)), //COM3
+  err => console.log(err)
+)
 
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
@@ -141,6 +164,17 @@ io.on('connect', (socket) => {
     
       
     });
+
+    socket.on('calculate-winner', ()=>{
+      if(players.player1.score > players.player2.score){
+        io.emit('winner', players.player1.color)
+        console.log("Winner", players.player1.color)
+      } else if (players.player2.score > players.player1.score){
+        io.emit('winner', players.player2.color)
+        console.log("Winner", players.player2.color)
+      }
+
+    })
 
     socket.on("disconnect", () => {
       console.log("Cliente desconectado:", socket.id);

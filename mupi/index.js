@@ -37,7 +37,7 @@ const app = p5 => {
     let home;
 
     //Timer
-    let startingTime = 60;// el timer empezara desde 60 segundos
+    let startingTime = 10;// el timer empezara desde 60 segundos
     let lastUpdateTime = 0;
     let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
     let timeStarted = false; //indica si el temporizador ya esta activo
