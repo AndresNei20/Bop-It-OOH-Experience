@@ -110,6 +110,7 @@ io.on('connect', (socket) => {
           players.player2.id = socket.id;
           players.player2.color = "red";
           assigned = players.player2;
+          io.emit('change-to-instructions')
       }
 
       // Envía el nombre asignado al cliente
@@ -169,11 +170,14 @@ io.on('connect', (socket) => {
     socket.on('calculate-winner', ()=>{
       if(players.player1.score > players.player2.score){
         io.emit('winner', players.player1.color)
+        io.emit('change-to-winner', players.player1)
         console.log("Winner", players.player1.color)
       } else if (players.player2.score > players.player1.score){
         io.emit('winner', players.player2.color)
+        io.emit('change-to-winner', players.player2)
         console.log("Winner", players.player2.color)
       }
+      
 
     })
 

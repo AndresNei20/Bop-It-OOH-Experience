@@ -173,7 +173,27 @@ const app = p5 => {
       }
     })
 
-    
+    socket.on('pressed', (data) => {
+      console.log("llega la data:" + data)
+      
+      console.log("boton presionado", data)
+      if (currentColor == 'button') {
+        console.log("Entra en la instrucción")
+        console.log("Estoy comparando " + playerData.color + "con " + data)
+        console.log(typeof playerData.color)
+        console.log(typeof data)
+        if(playerData.color != data){
+          console.log("Other player pressed first the arduino button")
+        } else {
+          console.log("You pressed first the arduino button")
+          playerData.score += 100;
+          socket.emit('send-item', playerData);
+          socket.emit('updateScore', playerData);
+          socket.emit('generate-new-color');
+        }
+        
+      }
+    })
   
   }
   

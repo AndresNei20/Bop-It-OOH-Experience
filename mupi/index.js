@@ -2,8 +2,9 @@ import {io} from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 import {Players} from './screens/playersScreen.js'
 import {Instructions} from './screens/instruction.js'
 import { Score } from './screens/score.js';
-import { Go } from './screens/go.js';
 import { Home } from './screens/home.js';
+import { Winner } from './screens/winner.js';
+import { Ending } from './screens/ending.js';
 
 let players = {
   player1: {
@@ -35,6 +36,9 @@ const app = p5 => {
     let socket; 
     let currentColor;
     let home;
+    let winnerScreen;
+    let endingScreen;
+    let winnerPlayer;
 
     //Timer
     let startingTime = 10;// el timer empezara desde 60 segundos
@@ -47,14 +51,28 @@ const app = p5 => {
     p5.setup = function() {
         p5.createCanvas(600, 812);
 
+      // Obtener el ancho y alto de la ventana del navegador
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      // Calcular las coordenadas X e Y del centro de la pantalla
+      const centerX = windowWidth / 2 - p5.width / 3;
+      const centerY = windowHeight / 2 - p5.height / 3;
+
+      // Posicionar el canvas en el centro de la pantalla
+      p5.canvas.style.position = 'absolute';
+      p5.canvas.style.left = `${centerX}px`;
+      p5.canvas.style.top = `${centerY}px`;
+
         socket = io.connect('http://localhost:3000', {path: '/real-time'});
         socket.emit("mupi-connected");
 
         home = new Home(p5)
-        go = new Go(p5);
         instructions = new Instructions(p5);
         playersScreen = new Players(p5);
         scoreScreen = new Score(p5);
+        winnerScreen = new Winner(p5);
+        endingScreen = new Ending(p5);
 
         currentScreen = home; 
 
@@ -97,16 +115,16 @@ const app = p5 => {
             console.log("Received color:", color);
             currentColor = color;
         });
-    
-        socket.on('first-player-pressed', (user) => {
-            console.log('I pressed the button first and earned points!');
-            
-        });
         
-        socket.on('other-player-pressed', (item) => {
-            console.log('Other player pressed the button first.');
-        }); 
+        socket.on('change-to-winner', (winner)=>{
+          currentScreen = winnerScreen;
+          winnerPlayer = winner
+        })
 
+        socket.on('change-to-instructions', ()=>{
+          currentScreen = instructions;
+        })
+        
     }
     
     p5.draw = function() {
@@ -165,9 +183,6 @@ const app = p5 => {
 
     if(currentScreen == scoreScreen){
 
-
-
-      
       p5.textSize(20);
       // Nombre del jugador 1 (centrado) con color personalizado
       p5.stroke(`${players.player1.color} `); // Color del trazo
@@ -196,7 +211,24 @@ const app = p5 => {
       p5.text(`${players.player2.score} ` + " pts", p5.width / 2 + 140, 460);
 
     }
-     
+    
+    if(currentScreen == winnerScreen){
+      p5.textSize(20);
+      // Nombre del jugador 1 (centrado) con color personalizado
+      p5.stroke(`${winnerPlayer.color} `); // Color del trazo
+      p5.strokeWeight(1);
+      p5.textAlign(p5.CENTER, p5.CENTER);
+      p5.fill(`${winnerPlayer.color} `); // Aplica el color personalizado a JohnDoe
+      p5.text(`${winnerPlayer.name} `, p5.width / 2, 370);
+
+      // Puntuación de jugador 1 (alineada a la derecha)
+      p5.textAlign(p5.LEFT, p5.LEFT);
+      p5.noStroke(); // Elimina el trazo para la puntuación
+      p5.fill('white'); // Restablece el color predeterminado para la puntuación
+      p5.text(`${winnerPlayer.score} ` + " pts", p5.width / 2 + 140, 370);
+      
+    }
+
     }
   
   }
