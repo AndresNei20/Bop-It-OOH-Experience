@@ -28,7 +28,8 @@ export class DataUser {
 
         this.submitButton = this.p5.createButton('Enviar');
         this.submitButton.position(190, 700);
-        this.submitButton.mousePressed(this.submitFormData.bind(this));
+        this.submitButton.mousePressed(this.submitFormData.bind(this))
+        this.submitButton.style('backgorund-color', '#FFE610'); // Set background color
         this.hideInput();
         
   

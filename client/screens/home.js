@@ -8,13 +8,25 @@ export class Home {
       this.blueCircle = this.p5.loadImage('img/blue_circle.png');
       this.yellowTriangle = this.p5.loadImage('img/yellow_triangle.png');
       
+      this.customFont = null;
+      this.preload();
+
       this.arrow = this.p5.loadImage('img/arrow.png');
       this.playButton = this.p5.createButton('Play Now');
-      this.playButton.position(180, 700);
+      this.playButton.position(145, 600);
+      this.playButton.style('background-color', '#FFE610'); // Set background color
+      this.playButton.style('color', 'black'); // Set text color
+      this.playButton.style('padding', '10px 20px'); // Set padding
+      this.playButton.style('font-size', '20px'); // Set font size
+      this.playButton.style('border', 'none'); // Set font size
       this.playButton.mousePressed(this.handlePlayPressed.bind(this));
 
       this.hideInput();
+  }
 
+  preload() {
+    // Load the custom font in the preload function
+    this.customFont = this.p5.loadFont('../font/russo.ttf');
   }
 
   setPlayCallback(callback) {
@@ -37,6 +49,7 @@ export class Home {
     p5.image(this.yellowTriangle, 320, 30);
     p5.image(this.arrow, 150, 500);
 
+    this.p5.textFont(this.customFont);
     this.playButton.show();
 
   
