@@ -7,9 +7,9 @@ export class Players {
         this.titleSize = 40;
         this.textSize = 25;
         this.playerOneColor = 'blue';
-        this.playerTwoColor = 'red';
+        this.playerTwoColor = 'orange';
         this.borderColorPlayerOne = 'blue'; // Color del borde del recuadro de Player 1
-        this.borderColorPlayerTwo = 'red'; // Color del borde del recuadro de Player 2
+        this.borderColorPlayerTwo = 'orange'; // Color del borde del recuadro de Player 2
         this.borderWidth = 3; // Grosor del borde del recuadro
         this.borderRadius = 10; // Radio de borde para hacerlo redondeado
         this.boxPadding = 10; // Espaciado alrededor del texto dentro del recuadro
@@ -17,6 +17,8 @@ export class Players {
         this.textColor = 'white'; // Color del texto dentro de las cajas
         this.textPlayerOne = "John Doe 1"; // Texto para Player 1
         this.textPlayerTwo = "John Doe 2"; // Texto para Player 2
+
+        this.customFont = p5.loadFont('/fonts/RussoOne-Regular.ttf');
     }
 
     show(p5) {
@@ -26,7 +28,9 @@ export class Players {
         p5.textSize(this.titleSize);
         p5.fill(this.titleColor);
         p5.stroke(this.textStrokeColor);
-        p5.strokeWeight(2);
+        p5.strokeWeight(1);
+
+        p5.textFont(this.customFont);
 
         const centerX = p5.width / 2;
         const centerY = p5.height / 5;

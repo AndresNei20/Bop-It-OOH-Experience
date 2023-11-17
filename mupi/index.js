@@ -4,6 +4,8 @@ import {Instructions} from './screens/instruction.js'
 import { Score } from './screens/score.js';
 import { Go } from './screens/go.js';
 import { Home } from './screens/home.js';
+import { Winner } from './screens/winner.js';
+import { Ending } from './screens/ending.js';
 
 let players = {
   player1: {
@@ -35,6 +37,8 @@ const app = p5 => {
     let socket; 
     let currentColor;
     let home;
+    let winnerScreen;
+    let endingScreen;
 
     //Timer
     let startingTime = 60;// el timer empezara desde 60 segundos
@@ -47,6 +51,19 @@ const app = p5 => {
     p5.setup = function() {
         p5.createCanvas(600, 812);
 
+      // Obtener el ancho y alto de la ventana del navegador
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      // Calcular las coordenadas X e Y del centro de la pantalla
+      const centerX = windowWidth / 2 - p5.width / 3;
+      const centerY = windowHeight / 2 - p5.height / 3;
+
+      // Posicionar el canvas en el centro de la pantalla
+      p5.canvas.style.position = 'absolute';
+      p5.canvas.style.left = `${centerX}px`;
+      p5.canvas.style.top = `${centerY}px`;
+
         socket = io.connect('http://localhost:3000', {path: '/real-time'});
         socket.emit("mupi-connected");
 
@@ -55,8 +72,10 @@ const app = p5 => {
         instructions = new Instructions(p5);
         playersScreen = new Players(p5);
         scoreScreen = new Score(p5);
+        winnerScreen = new Winner(p5);
+        endingScreen = new Ending(p5);
 
-        currentScreen = home; 
+        currentScreen = endingScreen; 
 
         socket.on('players-data', (data) => {
           players = data
@@ -165,9 +184,6 @@ const app = p5 => {
 
     if(currentScreen == scoreScreen){
 
-
-
-      
       p5.textSize(20);
       // Nombre del jugador 1 (centrado) con color personalizado
       p5.stroke(`${players.player1.color} `); // Color del trazo

@@ -3,7 +3,7 @@ export class Home {
       this.p5 = p5;
       this.logo = this.p5.loadImage('img/logo.png');
       this.back = this.p5.loadImage('img/back.png');
-      this.yellowCircle = this.p5.loadImage('img/yellow_circle.png');
+      this.yellowCircle = this.p5.loadImage('img/yellow-circle.png');
       this.violetCircle = this.p5.loadImage('img/violet_circle.png');
       this.blueCircle = this.p5.loadImage('img/blue_circle.png');
       this.yellowTriangle = this.p5.loadImage('img/yellow_triangle.png');
@@ -30,8 +30,8 @@ export class Home {
   show(p5) {
     p5.background('black');
     p5.image(this.back, -120, 200);
-    p5.image(this.logo, 40, 100);
-    p5.image(this.yellowCircle, 0, 0);
+    p5.image(this.logo, 100, 100);
+    p5.image(this.yellowCircle, 0, 10);
     p5.image(this.violetCircle, 320, 500);
     p5.image(this.blueCircle, 0, 400);
     p5.image(this.yellowTriangle, 320, 30);
