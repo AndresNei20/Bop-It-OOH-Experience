@@ -3,23 +3,37 @@ export class Score {
         this.p5 = p5;
         this.background = this.p5.loadImage('../img/back_instructions.png');
         this.purpleLine = this.p5.loadImage('../img/purpleLine.png');
+        this.yellowTriangle = this.p5.loadImage('img/yellow_triangle2.png');
+        this.violetCircle = this.p5.loadImage('img/violet_circle2.png');
+        this.pinkCircle = this.p5.loadImage('img/pinkButton.png');
+        this.blueCircle = this.p5.loadImage('img/blue_circle.png');
+
         this.titleSize = 60;
         this.textSize = 20; // Tamaño de texto para Player 1 y puntuación
         this.titleTextSize = 50; // Tamaño de texto para el título "SCORE"
         this.textColor = 'white';
         this.colorPlayer1 = 'blue'; // Color personalizado para JohnDoe
         this.colorPlayer2 = 'red'; // Color personalizado para el nombre de Player 2
+
+        this.customFont = p5.loadFont('/fonts/RussoOne-Regular.ttf');
+
     }
 
     show(p5) {
         p5.background('black');
         p5.image(this.background, 0, 0);
+        p5.image(this.yellowTriangle, 260, 10);
+        p5.image(this.violetCircle, 400, 100);
+        p5.image(this.pinkCircle, 100, 80);  
+        p5.image(this.blueCircle, -20, 150);  
 
         // Configura el título "SCORE" con un trazo blanco
         p5.textSize(this.titleTextSize);
         p5.fill('yellow');
         p5.stroke('yellow'); // Color del trazo
-        p5.strokeWeight(3); // Grosor del trazo
+        p5.strokeWeight(2); // Grosor del trazo
+
+        p5.textFont(this.customFont);
 
         const centerX = p5.width / 2;
         const centerY = p5.height / 2.8;
