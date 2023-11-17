@@ -6,7 +6,10 @@ export class Loser {
         this.back = this.p5.loadImage('img/back_red.png');
         this.bolitas =  this.p5.loadImage('img/bolitas_red.png')
         this.nextButton = this.p5.createButton('SEE RESULTS');
-        this.nextButton.position(160, 463);
+        this.nextButton.position(155, 458);
+        this.nextButton.style('background-color', '#1A1A1A');
+        this.nextButton.style('color', 'white');
+        this.nextButton.style('border', 'none');
         this.nextButton.mousePressed(this.handleResultsPressed.bind(this));
 
         this.hideInput();
@@ -25,10 +28,8 @@ export class Loser {
 
         p5.textSize(25);
         p5.fill(250);
-        p5.noStroke()
-
-        p5.text('OH NO', 165, 350);
-        p5.text('YOU LOST', 145, 380);
+        p5.text('OH NO', 165, 360);
+        p5.text('YOU LOST', 145, 390);
 
         this.nextButton.show();
     }

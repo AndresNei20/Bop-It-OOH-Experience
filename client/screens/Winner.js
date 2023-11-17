@@ -5,7 +5,10 @@ export class Winner {
         this.back = this.p5.loadImage('img/back_blue.png');
         this.bolitas =  this.p5.loadImage('img/bolitas_blue.png')
         this.nextButton = this.p5.createButton('SEE RESULTS');
-        this.nextButton.position(160, 463);
+        this.nextButton.position(152, 456);
+        this.nextButton.style('background-color', '#1A1A1A');
+        this.nextButton.style('color', 'white');
+        this.nextButton.style('border', 'none'); // Elimina el borde
         this.nextButton.mousePressed(this.handleResultsPressed.bind(this));
 
         this.hideInput();
@@ -30,7 +33,7 @@ export class Winner {
         p5.text('CONGRATS', 140, 350);
         p5.text('YOU ARE', 150, 380);
         p5.text('AMAZING', 150, 410);
-
+        
         this.nextButton.show();
 
     }
