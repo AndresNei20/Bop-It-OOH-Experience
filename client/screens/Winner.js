@@ -5,7 +5,7 @@ export class Winner {
         this.back = this.p5.loadImage('img/back_blue.png');
         this.bolitas =  this.p5.loadImage('img/bolitas_blue.png')
         this.nextButton = this.p5.createButton('SEE RESULTS');
-        this.nextButton.position(160, 463);
+        this.nextButton.position(140, 453);
         this.nextButton.mousePressed(this.handleResultsPressed.bind(this));
 
         this.hideInput();

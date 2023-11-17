@@ -31,6 +31,10 @@ export class DataUser {
         this.submitButton.mousePressed(this.submitFormData.bind(this))
         this.submitButton.style('backgorund-color', '#FFE610'); // Set background color
         this.hideInput();
+
+        this.nameInput.style('color', 'white');
+        this.birthdayInput.style('color', 'white');
+        this.emailInput.style('color', 'white');
         
   
     }

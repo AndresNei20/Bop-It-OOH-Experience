@@ -40,7 +40,7 @@ const app = p5 => {
   
 
   //Timer
-  let startingTime = 60;// el timer empezara desde 60 segundos
+  let startingTime = 2;// el timer empezara desde 60 segundos
   let lastUpdateTime = 0;
   let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
   let timeStarted = false; //indica si el temporizador ya esta activo
@@ -108,14 +108,17 @@ const app = p5 => {
     });
 
     score = new Score(p5);
-    score.setNextCallback(() => {
+  /*   score.setNextCallback(() => {
       currentScreen.hideInput();
       currentScreen = cupon;
       currentScreen.showInput();
       console.log("Cambiado a score por clic en see results");
-    });
+    }); */
 
-    currentScreen = home; 
+
+    cupon = new Cupon(p5)
+
+    currentScreen = score; 
 
     socket.on('assigned', (playerAsig) => {
       playerData = playerAsig;
