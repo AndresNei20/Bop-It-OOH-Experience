@@ -27,6 +27,7 @@ const app = p5 => {
   let currentColor;
   let pressedFirst = false;
   let winnerPlayer = "";  
+  let leaders = [];
 
   let playerData = {
     id: 0,
@@ -195,7 +196,10 @@ const app = p5 => {
         
       }
     })
-  
+    
+  socket.on('table-board', (playersList) =>{
+      leaders = playersList;
+  })
   }
   
   p5.draw = function() {
@@ -269,6 +273,24 @@ const app = p5 => {
       // Resto del contenido
       p5.textSize(24);
       p5.text(`Crazy Score\n${playerData.name}\nCongratulations!`, p5.width / 2, 250 + yOffsetRest);
+
+      // Tabla de líderes
+      p5.textSize(22);
+      p5.fill(255); // Texto en blanco
+      p5.text('Leader Board', p5.width / 2, 375 + yOffsetRest);
+      leaders.forEach((leader, index) => {
+          let y = 400 + index * 50 + yOffsetRest;
+          p5.fill(index === 0 ? 255 : 0, index === 0 ? 20 : 0, index === 0 ? 200 : 255); // Color azul para los líderes
+          p5.rect(p5.width / 2.4 - 130, y, 335,30); // Ajusta las dimensiones del rectángulo según sea necesario
+          p5.fill(255); // Números en blanco
+          p5.textSize(16);
+          p5.text(`${index + 1}. ${leader.name}`, p5.width / 2 - 120, y + 20);
+          if (leader.score) {
+              p5.textAlign(p5.RIGHT, p5.CENTER);
+              p5.text(`${leader.score} points`, p5.width / 2 + 120, y + 20);
+              p5.textAlign(p5.LEFT, p5.CENTER);
+          }
+      });
     }
 
   }
