@@ -4,6 +4,7 @@ const cors = require('cors');
 const PORT = 3000
 const {SerialPort} = require('serialport');
 const {ReadlineParser} = require('@serialport/parser-readline');
+const Firebase = require("./firebase.js");
 
 
 const app = express();
@@ -98,26 +99,42 @@ io.on('connect', (socket) => {
       socket.emit('pressed', data);
     });
     
-    socket.on('player-connected', () => {
+    socket.on('player-connected', async () => {
       playersConnected++;
-      console.log("players connected:", playersConnected)
-
+      console.log("players connected:", playersConnected);
+    
+      let userToCreate;
+      let playerKey;
+    
       if (!players.player1.id) {
-          players.player1.id = socket.id;
-          players.player1.color = "blue";
-          assigned = players.player1;
+        players.player1.color = "blue";
+        userToCreate = players.player1;
+        playerKey = 'player1';
       } else if (!players.player2.id) {
-          players.player2.id = socket.id;
-          players.player2.color = "red";
-          assigned = players.player2;
-          io.emit('change-to-instructions')
+        players.player2.color = "red";
+        userToCreate = players.player2;
+        playerKey = 'player2';
+        io.emit('change-to-instructions');
       }
-
-      // Envía el nombre asignado al cliente
-      console.log('assigned', assigned)
-      socket.emit('assigned', assigned);
-      console.log(players)
-
+    
+      // Crear usuario en Firestore y esperar los datos actualizados
+      try {
+        const updatedUser = await Firebase.createUserDB(userToCreate);
+    
+        // Asignar el usuario actualizado a 'assigned'
+        assigned = updatedUser;
+    
+        // Actualizar el jugador correspondiente en el arreglo 'players'
+        players[playerKey] = assigned;
+    
+        // Envía el nombre asignado al cliente
+        socket.emit('assigned', assigned);
+        console.log('Enviado a Firebase y al cliente:', assigned);
+      } catch (error) {
+        console.error("Error al crear usuario en Firebase:", error);
+      }
+    
+      console.log(players);
     });
     
     socket.on('players-details', (data) => {
