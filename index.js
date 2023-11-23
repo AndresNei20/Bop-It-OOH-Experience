@@ -183,10 +183,11 @@ io.on('connect', (socket) => {
 
     socket.on('updateScore', (winner) => {
         io.emit('update-score-player', winner);
-    
+
+        
     });
 
-    socket.on('calculate-winner', ()=>{
+    socket.on('calculate-winner', async()=>{
       if(players.player1.score > players.player2.score){
         io.emit('winner', players.player1.color)
         io.emit('change-to-winner', players.player1)
@@ -196,8 +197,11 @@ io.on('connect', (socket) => {
         io.emit('change-to-winner', players.player2)
         console.log("Winner", players.player2.color)
       }
-      
 
+      const playersList = await Firebase.getUsersDB();
+      console.log("PlayerBoard", playersList)
+      io.emit('table-board', playersList)
+      
     })
 
     socket.on("disconnect", () => {
