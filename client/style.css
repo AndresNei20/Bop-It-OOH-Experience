@@ -7,3 +7,19 @@
 body{
     margin: 0;
 }
+input {
+    border-radius: 10px;
+    background-color: black;
+    border-color: FFE610;
+    height: 35px;
+    color: white;
+
+}
+
+ button{
+    background-color:FFE610;
+    color: black; 
+    padding: '10px 20px'; 
+    font-size: 20px;
+    border: none;
+ }
