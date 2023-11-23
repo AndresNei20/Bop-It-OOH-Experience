@@ -78,7 +78,7 @@ const app = p5 => {
       currentScreen.showInput();
       if (currentScreen === waitingPlayers) {
         socket.emit('players-details', playerData)
-        socket.emit('players-waiting');
+        socket.emit('players-waiting', playerData.id);
         socket.emit('waiting-screen');
       }
     });

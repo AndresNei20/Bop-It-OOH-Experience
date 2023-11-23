@@ -140,20 +140,22 @@ io.on('connect', (socket) => {
     socket.on('players-details', (data) => {
       if (data.id == players.player1.id) {
         players.player1 = data;
+        Firebase.EditUserDB(data)
       } else if(data.id == players.player2.id) {
         players.player2 = data;
+        Firebase.EditUserDB(data)
       }
 
       console.log("Players: ", players)
       io.emit('players-data', players);
     })
 
-    socket.on('players-waiting', () => {
+    socket.on('players-waiting', (id) => {
       
-      console.log("Jugador esperando:", socket.id);
-      if (players.player1.id === socket.id) {
+      console.log("Jugador esperando:", id);
+      if (players.player1.id === id) {
           players.player1.isWaiting = true;
-      } else if (players.player2.id === socket.id) {
+      } else if (players.player2.id === id) {
           players.player2.isWaiting = true;
       }
   

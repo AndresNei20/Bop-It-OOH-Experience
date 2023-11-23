@@ -1,5 +1,5 @@
 const firebase = require("firebase/app");
-const { getFirestore, collection, setDoc, doc, addDoc, getDocs, query, orderBy } = require("firebase/firestore");
+const { getFirestore, collection, setDoc, doc, addDoc,updateDoc, getDocs, query, orderBy } = require("firebase/firestore");
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -40,17 +40,18 @@ const createUserDB = async (user) => {
   };
 
   
-  
-  const EditUserDB = async (user) =>{
+  const EditUserDB = async (user) => {
     try {
-      await setDoc (doc(db, "users", user.uid), user)
-      console.log("User aedited successfull")
-      return true
-    } catch (e) {
-      console.error("Error editing document: ", e);
-      return false
+      const userRef = doc(db, "users", user.id); // Usa 'id' en lugar de 'uid'
+      await updateDoc(userRef, user); // Actualiza el documento con los nuevos datos
+  
+      console.log("User edited successfully");
+      return true;
+    } catch (error) {
+      console.error("Error editing document: ", error);
+      return false;
     }
-  }
+  };
 
 const getUsersDB = async () => {
     const q = query(collection(db, "users"), orderBy("createdAt")); // order by createdAt

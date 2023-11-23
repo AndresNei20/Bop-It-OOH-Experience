@@ -74,7 +74,7 @@ const app = p5 => {
         winnerScreen = new Winner(p5);
         endingScreen = new Ending(p5);
 
-        currentScreen = winnerScreen; 
+        currentScreen = home; 
 
         socket.on('players-data', (data) => {
           players = data
