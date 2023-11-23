@@ -244,15 +244,15 @@ const app = p5 => {
           console.log("Antes de cambiar a winner/loser")
           console.log("Estoy comparando " + winnerPlayer + "con " + playerData.color)
           setTimeout(() => {
-            if(winnerPlayer == playerData.color){
-            currentScreen = winner;
-            console.log("entro a winner porque winner es " + winnerPlayer)
-          }else {
-            console.log("entro a loser porque winner es:" + winnerPlayer)
-            currentScreen = loser;
-          }
-          console.log("currentscreen:", currentScreen)
-          }, 100);
+              if(winnerPlayer == playerData.color){
+              currentScreen = winner;
+              console.log("entro a winner porque winner es " + winnerPlayer)
+              }else {
+                console.log("entro a loser porque winner es:" + winnerPlayer)
+                currentScreen = loser;
+              }
+              console.log("currentscreen:", currentScreen)
+          }, 500);
           
           
         }
