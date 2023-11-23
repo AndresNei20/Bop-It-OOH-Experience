@@ -278,10 +278,14 @@ const app = p5 => {
       p5.textSize(22);
       p5.fill(255); // Texto en blanco
       p5.text('Leader Board', p5.width / 2, 375 + yOffsetRest);
-      leaders.forEach((leader, index) => {
+
+      // Obtener solo los primeros tres líderes
+      const topThreeLeaders = leaders.slice(0, 3);
+
+      topThreeLeaders.forEach((leader, index) => {
           let y = 400 + index * 50 + yOffsetRest;
-          p5.fill(index === 0 ? 255 : 0, index === 0 ? 20 : 0, index === 0 ? 200 : 255); // Color azul para los líderes
-          p5.rect(p5.width / 2.4 - 130, y, 335,30); // Ajusta las dimensiones del rectángulo según sea necesario
+          p5.fill(index === 0 ? 255 : 0, index === 0 ? 20 : 0, index === 0 ? 200 : 255); // Color azul para el primer líder
+          p5.rect(p5.width / 2.4 - 130, y, 335, 30); // Ajusta las dimensiones del rectángulo según sea necesario
           p5.fill(255); // Números en blanco
           p5.textSize(16);
           p5.text(`${index + 1}. ${leader.name}`, p5.width / 2 - 120, y + 20);
@@ -290,7 +294,7 @@ const app = p5 => {
               p5.text(`${leader.score} points`, p5.width / 2 + 120, y + 20);
               p5.textAlign(p5.LEFT, p5.CENTER);
           }
-      });
+      }); 
     }
 
   }
