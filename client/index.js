@@ -57,7 +57,7 @@ const app = p5 => {
     home.setPlayCallback(() => {
       console.log("Cambiado a dataUser por clic en Play Now");
       currentScreen.hideInput();
-      currentScreen = dataUser; 
+      currentScreen = cupon; 
       currentScreen.showInput();
     });
 
