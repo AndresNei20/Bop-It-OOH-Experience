@@ -35,19 +35,27 @@ export class Cupon {
   
        // Dibujar botón de envío
        this.p5.fill(this.buttonColor);
-       this.p5.rect(this.p5.width / 2 - 50, 500, 100, 40); // Rectángulo del botón
-
+       const buttonWidth = 100;
+       const buttonHeight = 40;
+       const buttonX = this.p5.width / 2 - buttonWidth / 2;
+       const buttonY = 550; // Mover el botón hacia abajo cambiando la coordenada Y
+       
+       this.p5.rect(buttonX, buttonY, buttonWidth, buttonHeight); // Rectángulo del botón
+     
        // Centrar el texto dentro del botón
        this.p5.fill('#000000'); // Cambiar el color del texto a negro
        this.p5.textSize(18);
        this.p5.textStyle(this.p5.BOLD); // Establecer el texto en negrita
-
-       // Obtener la posición central horizontal del botón y del texto
-       const buttonCenterX = this.p5.width / 2;
-       const textWidth = this.p5.textWidth('SEND'); // Obtener el ancho del texto
-       const textX = buttonCenterX - textWidth / 2; // Centrar el texto restando la mitad de su ancho
-
-       this.p5.text('SEND', textX, 525); // Texto centrado en el botón// Texto centrado en el botón
+     
+       // Obtener la posición central horizontal del texto
+       const text = 'SEND';
+       const textWidth = this.p5.textWidth(text); // Obtener el ancho del texto
+       const textX = this.p5.width / 2 - textWidth / 2; // Centrar el texto horizontalmente
+     
+       // Centrar el texto verticalmente
+       const textY = buttonY + buttonHeight / 2 + 6; // Agregar un pequeño ajuste para centrar verticalmente
+       
+       this.p5.text(text, textX, textY); // Texto centrado en el botón// Texto centrado en el botón
     }
     
     hideInput(){
