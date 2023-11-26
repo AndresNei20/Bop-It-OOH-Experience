@@ -48,6 +48,14 @@ const app = p5 => {
   let timerVisible = false; // Controla la visibilidad del temporizador
 
   p5.setup = function() {
+
+    // redSound = p5.loadSound('sounds/Red.mp3');
+    // magentaSound = p5.loadSound('sounds/Magenta.mp3');  Estos vainos estan como raros
+    // yellowSound = p5.loadSound('sounds/yellow.mp3');
+    // orangeSound = p5.loadSound('sounds/Orange.mp3');
+    // bopitSound = p5.loadSound('sounds/bopit.mp3');
+    // blueSound = p5.loadSound('sounds/blue.mp3');
+
     p5.createCanvas(414, 896);
     
     socket = io.connect('http://localhost:3000', {path: '/real-time'});
@@ -57,7 +65,7 @@ const app = p5 => {
     home.setPlayCallback(() => {
       console.log("Cambiado a dataUser por clic en Play Now");
       currentScreen.hideInput();
-      currentScreen = cupon; 
+      currentScreen = dataUser; 
       currentScreen.showInput();
     });
 
@@ -142,6 +150,30 @@ const app = p5 => {
     socket.on('color', (color) => {
         console.log("Received color:", color);
         currentColor = color;
+
+        switch (color) {
+          case 'red':
+              this.redSound.play();
+              break;
+          case 'magenta':
+              this.magentaSound.play();
+              break;
+          case 'yellow':
+              this.yellowSound.play();
+              break;
+          case 'orange':
+              this.orangeSound.play();
+              break;
+          case 'bopit':
+              this.bopitSound.play();
+              break;
+          case 'blue':
+              this.blueSound.play();
+              break;
+
+          default:
+              break;
+      }
     });
 
     socket.on('first-player-pressed', (user) => {
