@@ -13,7 +13,7 @@ const server = http.createServer(app);;
 
 //ArduANO
 
-const protocolConfiguration = {
+/* const protocolConfiguration = {
   path: 'COM3',
   baudRate: 9600
 }
@@ -24,7 +24,7 @@ const parser = port.pipe(new ReadlineParser());
 SerialPort.list().then(
   ports => ports.forEach(port => console.log(port.path)), //COM3
   err => console.log(err)
-)
+) */
 
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
@@ -80,10 +80,6 @@ app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
 
-parser.on('data', (data) => {
-  console.log("data", data);
-  io.emit('pressed', data);
-});
 
 io.on('connect', (socket) => {
     console.log("Client connected:" );
@@ -92,14 +88,17 @@ io.on('connect', (socket) => {
 
     socket.on('mupi-connected', () => {
       console.log("mupi connected")
+      socket.clientType = 'mupi'; 
     });
 
-    parser.on('data', (data) => {
+    /* parser.on('data', (data) => {
       console.log("this is my data", data);
       socket.emit('pressed', data);
-    });
+    }); */
     
     socket.on('player-connected', async () => {
+          // ... código para manejar la conexión del jugador ...
+      socket.clientType = 'player';  // Asignar un tipo al socket para saber que es un jugador
       playersConnected++;
       console.log("players connected:", playersConnected);
     
@@ -123,9 +122,13 @@ io.on('connect', (socket) => {
     
         // Asignar el usuario actualizado a 'assigned'
         assigned = updatedUser;
+
+        // Almacena el ID de Firebase en el objeto socket
+        socket.userId = updatedUser.id; // Asumiendo que updatedUser contiene el ID de Firebase
     
         // Actualizar el jugador correspondiente en el arreglo 'players'
         players[playerKey] = assigned;
+
     
         // Envía el nombre asignado al cliente
         socket.emit('assigned', assigned);
@@ -204,41 +207,27 @@ io.on('connect', (socket) => {
       
     })
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
       console.log("Cliente desconectado:", socket.id);
-      if (players.player1.id === socket.id || players.player2.id === socket.id) { 
-          if (players.player1.id === socket.id) {
-            players.player1 =
-           {
-            id: 0,
-            name: "",
-            birthday: "",
-            email: "",
-            score: 0,
-            color: "",
-            isWaiting: false,
-          }
-          }
-          
-          if (players.player2.id === socket.id) 
-          { players.player2 = {
-            id: 0,
-            name: "",
-            birthday: "",
-            email: "",
-            score: 0,
-            color: "",
-            isWaiting: false,
-          }
-          };
-
-          playersConnected--;
-          console.log("Jugador desconectado. Total de jugadores:", playersConnected);
-      } else {
-          console.log("Mupi desconectado");
-          // Código para manejar la desconexión del mupi...
+    
+      // Solo disminuye playersConnected si el cliente desconectado es un jugador
+      if (socket.clientType === 'player') {
+        playersConnected--;
+        console.log("Jugador desconectado. Total de jugadores:", playersConnected);
+      } else if (socket.clientType === 'mupi') {
+        console.log("Mupi desconectado");
+        // Manejo de la desconexión del mupi si es necesario
       }
-  });
+    
+      // Lógica para restablecer el estado del jugador basado en userId
+      if (socket.userId) {
+        if (players.player1.id === socket.userId) {
+          players.player1 = { id: 0, name: "", birthday: "", email: "", score: 0, color: "", isWaiting: false };
+        } else if (players.player2.id === socket.userId) {
+          players.player2 = { id: 0, name: "", birthday: "", email: "", score: 0, color: "", isWaiting: false };
+        }
+      }
+    });
 });
 
 function checkIfBothPlayersAreWaiting() {
