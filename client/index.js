@@ -57,7 +57,7 @@ const app = p5 => {
     home.setPlayCallback(() => {
       console.log("Cambiado a dataUser por clic en Play Now");
       currentScreen.hideInput();
-      currentScreen = cupon; 
+      currentScreen = dataUser; 
       currentScreen.showInput();
     });
 
@@ -142,6 +142,12 @@ const app = p5 => {
     socket.on('color', (color) => {
         console.log("Received color:", color);
         currentColor = color;
+
+        if(currentColor == 'shake'){
+          currentScreen = shake
+        } else {
+          currentScreen = main
+        }
     });
 
     socket.on('first-player-pressed', (user) => {

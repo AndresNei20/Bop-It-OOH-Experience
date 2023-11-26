@@ -45,8 +45,8 @@ const io = require('socket.io')(server, {
 
 let playersConnected = 0;
 let firstPressed = false;
-/* let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button']; */
-let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
+/* let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button', 'shake']; */
+let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'shake'];
 function randomColor() {
   const index = Math.floor(Math.random() * colors.length);
   return colors[index];
@@ -80,6 +80,10 @@ app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
 
+/* parser.on('data', (data) => {
+      console.log("this is my data", data);
+      socket.emit('pressed', data);
+    }); */
 
 io.on('connect', (socket) => {
     console.log("Client connected:" );
@@ -91,10 +95,7 @@ io.on('connect', (socket) => {
       socket.clientType = 'mupi'; 
     });
 
-    /* parser.on('data', (data) => {
-      console.log("this is my data", data);
-      socket.emit('pressed', data);
-    }); */
+    
     
     socket.on('player-connected', async () => {
           // ... código para manejar la conexión del jugador ...
