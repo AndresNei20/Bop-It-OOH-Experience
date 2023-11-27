@@ -7,6 +7,21 @@ export class Main {
         this.pressedFirst = false;
         this.socket = socket;
         this.pressedFirst = pressedFirst;
+
+        this.backgroundSound = p5.loadSound('sounds/backgroungMusic.mp3', () => { console.log('sonido cargado')})
+        
+    }
+    playBackgroundSound() {
+        if (!this.backgroundSound.isPlaying()) {
+            this.backgroundSound.loop(); // Inicia la reproducción en bucle si no se está reproduciendo
+        }
+    }
+
+    // Método para detener el sonido después de 60 segundos
+    stopBackgroundSound() {
+        if (this.backgroundSound.isPlaying()) {
+            this.backgroundSound.stop(); // Detiene la reproducción si se está reproduciendo
+        }
     }
 
     isOverCircle(x, y, r) {
@@ -72,6 +87,8 @@ export class Main {
 
 
     show(p5) {
+        this.playBackgroundSound();
+
         p5.background('black');
 
         // Botón naranja (Rectángulo) 

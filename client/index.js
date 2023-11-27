@@ -47,9 +47,28 @@ const app = p5 => {
   let timeStarted = false; //indica si el temporizador ya esta activo
   let timerVisible = false; // Controla la visibilidad del temporizador
 
+  let soundFiles = {
+    red: 'sounds/Red.mp3',
+    magenta: 'sounds/Magenta.mp3',
+    yellow: 'sounds/Yellow.mp3',
+    orange: 'sounds/Orange.mp3',
+    bopit: 'sounds/Bopit.mp3',
+    blue: 'sounds/Blue.mp3'
+  };
+  
+  let sounds = {};
+
+  p5.preload = function() {
+    // Cargar todos los sonidos
+    for (let color in soundFiles) {
+      sounds[color] = p5.loadSound(soundFiles[color]);
+    }
+  }
+  
+
   p5.setup = function() {
     p5.createCanvas(414, 896);
-    
+
     socket = io.connect('http://localhost:3000', {path: '/real-time'});
     socket.emit("player-connected")
     
@@ -143,6 +162,11 @@ const app = p5 => {
         console.log("Received color:", color);
         currentColor = color;
 
+          // Reproducir el sonido del color correspondiente
+        if (sounds[currentColor]) {
+          sounds[currentColor].play();
+        }
+      
     });
 
     socket.on('first-player-pressed', (user) => {
