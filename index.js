@@ -28,6 +28,10 @@ SerialPort.list().then(
 
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
+  console.table({
+      'Player:': `http://localhost:${PORT}/player`,
+      'Mupi:': `http://localhost:${PORT}/mupi`,
+  });
 });
 
 app.use('/mupi', express.static('mupi'))
