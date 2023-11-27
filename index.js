@@ -45,8 +45,8 @@ const io = require('socket.io')(server, {
 
 let playersConnected = 0;
 let firstPressed = false;
-/* let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button', 'shake']; */
-let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'shake'];
+/* let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button']; */
+let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue'];
 function randomColor() {
   const index = Math.floor(Math.random() * colors.length);
   return colors[index];

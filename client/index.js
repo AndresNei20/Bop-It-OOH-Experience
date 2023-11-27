@@ -143,11 +143,6 @@ const app = p5 => {
         console.log("Received color:", color);
         currentColor = color;
 
-        if(currentColor == 'shake'){
-          currentScreen = shake
-        } else {
-          currentScreen = main
-        }
     });
 
     socket.on('first-player-pressed', (user) => {
