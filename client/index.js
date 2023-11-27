@@ -164,6 +164,14 @@ const app = p5 => {
 
           // Reproducir el sonido del color correspondiente
         if (sounds[currentColor]) {
+          if (currentColor === 'magenta') {
+            sounds[currentColor].setVolume(1.5); // Ajusta el volumen para el sonido magenta
+        } else if (currentColor === 'orange'){
+          sounds[currentColor].setVolume(1.5);
+        } 
+        else {
+            sounds[currentColor].setVolume(0.5); // Volumen para otros colores
+        }
           sounds[currentColor].play();
         }
       
