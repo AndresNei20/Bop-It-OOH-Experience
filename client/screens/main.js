@@ -8,7 +8,8 @@ export class Main {
         this.socket = socket;
         this.pressedFirst = pressedFirst;
 
-        this.backgroundSound = p5.loadSound('sounds/backgroungMusic.mp3', () => { console.log('sonido cargado')})
+        this.backgroundSound = p5.loadSound('sounds/backgroungMusic.mp3', () => { console.log('sonido cargado') 
+        this.backgroundSound.setVolume(0.2);})
         
     }
     playBackgroundSound() {
