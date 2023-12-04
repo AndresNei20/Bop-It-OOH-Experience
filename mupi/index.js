@@ -49,20 +49,8 @@ const app = p5 => {
 
     
     p5.setup = function() {
-        p5.createCanvas(600, 812);
-
-      // Obtener el ancho y alto de la ventana del navegador
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
-      // Calcular las coordenadas X e Y del centro de la pantalla
-      const centerX = windowWidth / 2 - p5.width / 3;
-      const centerY = windowHeight / 2 - p5.height / 3;
-
-      // Posicionar el canvas en el centro de la pantalla
-      p5.canvas.style.position = 'absolute';
-      p5.canvas.style.left = `${centerX}px`;
-      p5.canvas.style.top = `${centerY}px`;
+        p5.background(10);
+        p5.createCanvas(600, p5.windowHeight);
 
         socket = io.connect('http://localhost:3000', {path: '/real-time'});
         socket.emit("mupi-connected");

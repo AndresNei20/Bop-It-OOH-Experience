@@ -10,6 +10,7 @@ export class Home {
       this.yellowTriangle2 = this.p5.loadImage('img/yellow_triangle3.png');
       this.orangeCircle = this.p5.loadImage('img/orange_circle.png');
       this.logoHasbro = this.p5.loadImage('img/logo_hasbro.png');
+      this.qr = this.p5.loadImage('img/qr.jpeg');
 
       this.arrow = this.p5.loadImage('img/arrow.png');
 
@@ -27,8 +28,8 @@ export class Home {
     p5.image(this.yellowTriangle2, 10, 500);
     p5.image(this.orangeCircle, 250, 710);
     p5.image(this.logoHasbro, 5, 730);
-    p5.image(this.arrow, 260, 280);
-
+    p5.image(this.arrow, 260, 320);
+    p5.image(this.qr, 220, 420, 200, 200);
   
 }
 

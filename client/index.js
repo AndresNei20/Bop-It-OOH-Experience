@@ -31,10 +31,10 @@ const app = p5 => {
 
   let playerData = {
     id: 0,
-    name: "",
+    name: "Anne",
     birthday: "",
     email: "",
-    score: 0,
+    score: 5400,
     color: "",
     isWaiting: false,
   }
@@ -136,7 +136,8 @@ const app = p5 => {
       console.log("Cambiado a score por clic en see results");
     });
 
-    currentScreen = home; 
+    //CURRENT SCREEN 
+    currentScreen = score; 
 
     socket.on('assigned', (playerAsig) => {
       playerData = playerAsig;
