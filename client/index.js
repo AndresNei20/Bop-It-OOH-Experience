@@ -58,6 +58,11 @@ const app = p5 => {
   
   let sounds = {};
 
+  let audioContext;
+  let analyser;
+  let microphone;
+  let umbralDeGrito = 30;
+
   p5.preload = function() {
     // Cargar todos los sonidos
     for (let color in soundFiles) {
@@ -71,9 +76,17 @@ const app = p5 => {
 
     socket = io.connect('http://localhost:3000', {path: '/real-time'});
     socket.emit("player-connected")
+
+    p5.getMicrophoneInput()
+
+     // Iniciar el contexto de audio y el analizador
+    audioContext = new AudioContext();
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048; // Puedes ajustar este valor
     
     home = new Home(p5);
     home.setPlayCallback(() => {
+      
       console.log("Cambiado a dataUser por clic en Play Now");
       currentScreen.hideInput();
       currentScreen = dataUser; 
@@ -137,7 +150,7 @@ const app = p5 => {
     });
 
     //CURRENT SCREEN 
-    currentScreen = score; 
+    currentScreen = home; 
 
     socket.on('assigned', (playerAsig) => {
       playerData = playerAsig;
@@ -166,6 +179,12 @@ const app = p5 => {
           // Reproducir el sonido del color correspondiente
         if (sounds[currentColor]) {
           sounds[currentColor].play();
+        }
+
+        if (currentColor != 'scream'){
+          currentScreen = main
+        } else {
+          currentScreen = scream
         }
       
     });
@@ -231,6 +250,9 @@ const app = p5 => {
   p5.draw = function() {
     p5.background(0);
     currentScreen.show(p5);
+
+    let volume = p5.analyzeVolume();
+      console.log("Volume :", volume)
 
     // Timer function 
     if (timeStarted) {
@@ -323,6 +345,28 @@ const app = p5 => {
       }); 
     }
 
+    if(currentScreen == scream){
+      if(volume > umbralDeGrito ) {
+        console.log("¡Estoy gritando!", playerData.name);
+        // Mostrar algún indicador visual de que el grito fue detectado
+        p5.textSize(20);
+        p5.fill(255);
+        p5.text(`That's what I call screaming`, 100, 180);
+
+        playerData.score += 200;
+        socket.emit('send-item', playerData);
+        socket.emit('updateScore', playerData)
+        socket.emit('generate-new-color');
+
+      }
+    }
+      
+
+      
+  
+
+    
+
   }
 
   p5.mousePressed = function () {
@@ -330,6 +374,39 @@ const app = p5 => {
     pressedFirst = main.getPressedFirstStatus();
 
   }
+
+  p5.getMicrophoneInput = function() {
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        .then((stream) => {
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+            console.log("Micrófono listo");
+            // Intenta reanudar el contexto de audio
+            audioContext.resume().then(() => {
+                console.log("Contexto de Audio reanudado");
+            });
+        })
+        .catch((err) => {
+            console.error('Error al acceder al micrófono:', err);
+        });
+};
+
+  p5.analyzeVolume = function() {
+    console.log('Analizando volumen')
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    analyser.getByteFrequencyData(dataArray);
+  
+    let sum = 0;
+    for(let i = 0; i < bufferLength; i++) {
+      sum += dataArray[i];
+    }
+    let average = sum / bufferLength;
+    console.log('Average:', average)
+    return average; // Este es el volumen promedio
+  }
+
+
 }
 
 new p5(app);
