@@ -63,6 +63,11 @@ const app = p5 => {
   let microphone;
   let umbralDeGrito = 30;
 
+  let onshake;
+  let shakeThreshold = 15;
+  let acc = 0;
+  let totalAcc = 0;
+
   p5.preload = function() {
     // Cargar todos los sonidos
     for (let color in soundFiles) {
@@ -74,7 +79,7 @@ const app = p5 => {
   p5.setup = function() {
     p5.createCanvas(414, 896);
 
-    socket = io.connect('http://localhost:3000', {path: '/real-time'});
+    socket = io.connect('https://12da-186-168-85-232.ngrok-free.app', {path: '/real-time'});
     socket.emit("player-connected")
 
     p5.getMicrophoneInput()
@@ -122,7 +127,7 @@ const app = p5 => {
     main = new Main(p5, socket, pressedFirst);
     
     scream = new Scream(p5);
-    shake = new Shake(p5);
+    shake = new Shake(p5, playerData);
     cupon = new Cupon(p5);
 
     winner = new Winner(p5);
@@ -178,21 +183,16 @@ const app = p5 => {
 
           // Reproducir el sonido del color correspondiente
         if (sounds[currentColor]) {
-          if (currentColor === 'magenta') {
-            sounds[currentColor].setVolume(1.5); // Ajusta el volumen para el sonido magenta
-        } else if (currentColor === 'orange'){
-          sounds[currentColor].setVolume(1.5);
-        } 
-        else {
-            sounds[currentColor].setVolume(0.5); // Volumen para otros colores
-        }
           sounds[currentColor].play();
         }
 
-        if (currentColor != 'scream'){
-          currentScreen = main
-        } else {
+        if (currentColor == 'scream'){
           currentScreen = scream
+        } else if(currentColor == 'shake') {
+
+          currentScreen = shake
+        } else  {
+          currentScreen = main
         }
       
     });
@@ -250,9 +250,9 @@ const app = p5 => {
       }
     })
     
-  socket.on('table-board', (playersList) =>{
-      leaders = playersList;
-  })
+    socket.on('table-board', (playersList) =>{
+        leaders = playersList;
+    })
   }
   
   p5.draw = function() {
@@ -260,7 +260,7 @@ const app = p5 => {
     currentScreen.show(p5);
 
     let volume = p5.analyzeVolume();
-      console.log("Volume :", volume)
+      /* console.log("Volume :", volume) */
 
     // Timer function 
     if (timeStarted) {
@@ -359,21 +359,52 @@ const app = p5 => {
         // Mostrar algún indicador visual de que el grito fue detectado
         p5.textSize(20);
         p5.fill(255);
-        p5.text(`That's what I call screaming`, 100, 180);
+        p5.text(`That's what I call screaming`, 100, 120);
 
         playerData.score += 200;
+
+        setTimeout(() => {
+          console.log("Esperanding")
+        }, 500);
+          
         socket.emit('send-item', playerData);
         socket.emit('updateScore', playerData)
         socket.emit('generate-new-color');
 
       }
     }
-      
 
-      
-  
+    if(currentScreen == shake){
+      this.startShake();
+      onshake = this.onShake.bind(this); // Enlazar el método onShake
 
-    
+      /* p5.text(`Acceleration X: ${acc.x}, Y: ${acc.y} Z:  ${acc.z}`,  100, 180);
+      p5.text(`TotalACC: ${totalAcc}}`,  100, 220); */
+
+      if (totalAcc > shakeThreshold) {
+        console.log("Shake detected!");
+
+        // Mostrar algún indicador visual de que el grito fue detectado
+        p5.textSize(20);
+        p5.fill(255);
+        p5.text(`That's what I call shaking`, 100, 120);
+        
+
+        playerData.score += 200; 
+
+        setTimeout(() => {
+          console.log("Esperanding")
+        }, 500);
+          
+        socket.emit('send-item', playerData);
+        socket.emit('updateScore', playerData)
+        socket.emit('generate-new-color');
+
+        
+        // Aquí puedes manejar la lógica cuando se detecta una agitación
+        // Por ejemplo, actualizar la puntuación o cambiar el estado del juego
+    }
+    }
 
   }
 
@@ -400,7 +431,7 @@ const app = p5 => {
 };
 
   p5.analyzeVolume = function() {
-    console.log('Analizando volumen')
+    /* console.log('Analizando volumen') */
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     analyser.getByteFrequencyData(dataArray);
@@ -410,10 +441,32 @@ const app = p5 => {
       sum += dataArray[i];
     }
     let average = sum / bufferLength;
-    console.log('Average:', average)
+    /* console.log('Average:', average) */
     return average; // Este es el volumen promedio
   }
 
+  p5.onShake = function(event){
+    acc = event.accelerationIncludingGravity;
+    console.log("Acceleration X: ", acc.x, " Y: ", acc.y, " Z: ", acc.z);
+
+    totalAcc = Math.sqrt(acc.x * acc.x + acc.y * acc.y + acc.z * acc.z);
+    console.log("Total Acceleration: ", totalAcc);
+
+      
+  }
+
+  p5.startShake = function() {
+    // Añadir event listener cuando se inicia la detección
+    window.addEventListener('devicemotion', this.onShake);
+    console.log("Shake detection started");
+  }
+
+  p5.stopShake = function(){
+      // Remover event listener cuando ya no se necesita
+      window.removeEventListener('devicemotion', this.onShake);
+      console.log("Shake detection stopped");
+      
+  }
 
 }
 
