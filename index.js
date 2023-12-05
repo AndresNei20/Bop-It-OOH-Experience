@@ -9,12 +9,12 @@ const Firebase = require("./firebase.js");
 
 const app = express();
 app.use(cors())
-const server = http.createServer(app);;
+const server = http.createServer(app);
 
 //ArduANO
 
-/* const protocolConfiguration = {
-  path: 'COM3',
+const protocolConfiguration = {
+  path: 'COM7',
   baudRate: 9600
 }
 
@@ -24,7 +24,7 @@ const parser = port.pipe(new ReadlineParser());
 SerialPort.list().then(
   ports => ports.forEach(port => console.log(port.path)), //COM3
   err => console.log(err)
-) */
+)
 
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
@@ -51,8 +51,7 @@ let playersConnected = 0;
 let firstPressed = false;
 let actionCompleted = false;
 
-/* let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button', 'scream', 'shake']; */
-let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'scream',  'shake' ];
+let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button', 'scream', 'shake'];
 function randomColor() {
   actionCompleted = false;
   const index = Math.floor(Math.random() * colors.length);
@@ -87,13 +86,8 @@ app.get('/', (req, res) => {
   res.send('¡Hola Mundo!');
 });
 
-/* parser.on('data', (data) => {
-      console.log("this is my data", data);
-      socket.emit('pressed', data);
-    }); */
 
 io.on('connect', (socket) => {
-    console.log("Client connected:" );
     
     console.log("players connected:", playersConnected)
 
@@ -101,8 +95,11 @@ io.on('connect', (socket) => {
       console.log("mupi connected")
       socket.clientType = 'mupi'; 
     });
-
     
+    parser.on('data', (data) => {
+      console.log("this is my data", data);
+      socket.emit('pressed', data);
+    });
     
     socket.on('player-connected', async () => {
           // ... código para manejar la conexión del jugador ...
@@ -177,7 +174,7 @@ io.on('connect', (socket) => {
       io.emit("screen-change");
     });
 
-    socket.on("generate-new-color", () => { // Escuchar una solicitud de un nuevo color
+    socket.on("generate-new-color", () => { 
       currentColor = randomColor(); // Generar un nuevo color
       io.emit('color', currentColor); // Emitir el nuevo color a todos los clientes conectados
     });

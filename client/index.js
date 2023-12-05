@@ -28,6 +28,7 @@ const app = p5 => {
   let pressedFirst = false;
   let winnerPlayer = "";  
   let leaders = [];
+  let pressed;
 
   let playerData = {
     id: 0,
@@ -61,7 +62,7 @@ const app = p5 => {
   let audioContext;
   let analyser;
   let microphone;
-  let umbralDeGrito = 30;
+  let umbralDeGrito = 50;
 
   let onshake;
   let shakeThreshold = 15;
@@ -81,7 +82,7 @@ const app = p5 => {
   p5.setup = function() {
     p5.createCanvas(414, 896);
 
-    socket = io.connect('https://12da-186-168-85-232.ngrok-free.app', {path: '/real-time'});
+    socket = io.connect('https://8285-200-3-193-228.ngrok-free.app', {path: '/real-time'});
     socket.emit("player-connected")
 
     p5.getMicrophoneInput()
@@ -239,8 +240,15 @@ const app = p5 => {
         console.log("Entra en la instrucción")
         console.log("Estoy comparando " + playerData.color + "con " + data)
         console.log(typeof playerData.color)
-        console.log(typeof data)
-        if(playerData.color != data){
+        console.log(data)
+
+        if(data == 1){
+          pressed = 'blue'
+        } else if(data == 2){
+          pressed = 'red'
+        }
+
+        if(playerData.color != pressed){
           console.log("Other player pressed first the arduino button")
         } else {
           console.log("You pressed first the arduino button")
@@ -263,7 +271,7 @@ const app = p5 => {
     currentScreen.show(p5);
 
     let volume = p5.analyzeVolume();
-    console.log("Volume :", volume)
+    /* console.log("Volume :", volume) */
 
     // Timer function 
     if (timeStarted) {
@@ -341,7 +349,7 @@ const app = p5 => {
       // Obtener solo los primeros tres líderes
       const topThreeLeaders = leaders.slice(0, 3);
 
-      let startY = 400; // Starting Y position for the leaderboard
+      let startY = 500; // Starting Y position for the leaderboard
       let rectHeight = 80; // Height of each leaderboard entry
       let padding = 10; // Padding between entries
       let colors = ['#ffcc00', '#0099cc', '#ff9900']; // Colors for 1st, 2nd

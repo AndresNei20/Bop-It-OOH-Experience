@@ -10,7 +10,7 @@ export class Home {
       this.yellowTriangle2 = this.p5.loadImage('img/yellow_triangle3.png');
       this.orangeCircle = this.p5.loadImage('img/orange_circle.png');
       this.logoHasbro = this.p5.loadImage('img/logo_hasbro.png');
-      this.qr = this.p5.loadImage('img/qr.jpeg');
+      this.qr = this.p5.loadImage('img/qr.PNG');
 
       this.arrow = this.p5.loadImage('img/arrow.png');
 

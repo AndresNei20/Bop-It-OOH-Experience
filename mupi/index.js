@@ -52,7 +52,7 @@ const app = p5 => {
         p5.background(10);
         p5.createCanvas(600, p5.windowHeight);
 
-        socket = io.connect('https://12da-186-168-85-232.ngrok-free.app', {path: '/real-time'});
+        socket = io.connect('https://8285-200-3-193-228.ngrok-free.app', {path: '/real-time'});
         socket.emit("mupi-connected");
 
         home = new Home(p5)
