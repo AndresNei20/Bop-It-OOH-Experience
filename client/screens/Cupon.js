@@ -8,6 +8,7 @@ export class Cupon {
       this.discountTagColor = '#FF0000'; // Etiqueta roja para el descuento
       this.buttonColor = '#FFFF00'; // Botón amarillo
       this.cuponImageSrc = 'path_to_your_cupon_image.png'; // Asegúrate de proporcionar la ruta correcta a la imagen del cupón
+      this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
     }
   
     preload() {
@@ -23,7 +24,7 @@ export class Cupon {
       // Dibujar imagen del cupón
       this.p5.image(this.cuponImage, this.p5.width / 2 - this.cuponImage.width / 2, 100);
         
-  
+      p5.textFont(this.customFont);
       // Dibujar texto del cupón
       this.p5.textSize(20);
       this.p5.text('50% OFF', 160, 360); // Cambia los números para ajustar la posición

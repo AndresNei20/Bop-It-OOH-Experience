@@ -30,6 +30,8 @@ export class DataUser {
         this.submitButton.style('border', 'none'); // Elimina el borde
         this.submitButton.style('border-radius', '5px'); 
         this.submitButton.mousePressed(this.submitFormData.bind(this));
+
+        this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
         this.hideInput();
         
   

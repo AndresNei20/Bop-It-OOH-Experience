@@ -11,6 +11,8 @@ export class Score {
         this.nextButton.position(340, 800);
         this.nextButton.mousePressed(this.handleNextPressed.bind(this));
 
+        this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
+
         this.hideInput();
     }
 

@@ -10,6 +10,8 @@ export class Scream {
         this.blueLine = this.p5.loadImage('img/blue_line.png');
         this.yellowLine = this.p5.loadImage('img/yellow_line.png');
 
+        this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
+
     }
 
     show(p5) {

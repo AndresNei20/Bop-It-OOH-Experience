@@ -341,20 +341,24 @@ const app = p5 => {
       // Obtener solo los primeros tres líderes
       const topThreeLeaders = leaders.slice(0, 3);
 
-      topThreeLeaders.forEach((leader, index) => {
-          let y = 400 + index * 50 + yOffsetRest;
-          p5.fill(index === 0 ? 255 : 0, index === 0 ? 20 : 0, index === 0 ? 200 : 255); // Color azul para el primer líder
-          p5.rect(p5.width / 2.4 - 130, y, 335, 30); // Ajusta las dimensiones del rectángulo según sea necesario
-          p5.fill(255); // Números en blanco
-          p5.textSize(16);
-          p5.text(`${index + 1}. ${leader.name}`, p5.width / 2 - 120, y + 20);
-          if (leader.score) {
-              p5.textAlign(p5.RIGHT, p5.CENTER);
-              p5.text(`${leader.score} points`, p5.width / 2 + 120, y + 20);
-              p5.textAlign(p5.LEFT, p5.CENTER);
-          }
-      }); 
+      let startY = 400; // Starting Y position for the leaderboard
+      let rectHeight = 80; // Height of each leaderboard entry
+      let padding = 10; // Padding between entries
+      let colors = ['#ffcc00', '#0099cc', '#ff9900']; // Colors for 1st, 2nd
+
+      topThreeLeaders.map((leader, index) => {
+        let y = startY + (rectHeight + padding) * index;
+        
+        p5.fill(colors[index]);
+        p5.rect(20, y, p5.width - 40, rectHeight, 20);
+        
+        p5.fill(0); // Text color
+        p5.textSize(16); // Text size
+        p5.text(`${index + 1}. ${leader.name} - ${leader.score} points`, p5.width / 2, y + rectHeight / 2);
+      });
     }
+
+    
 
     if(currentScreen == scream){
       

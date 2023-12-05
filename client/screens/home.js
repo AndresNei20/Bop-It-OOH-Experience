@@ -18,6 +18,8 @@ export class Home {
       this.playButton.style('border-radius', '5px'); 
       this.playButton.mousePressed(this.handlePlayPressed.bind(this));
 
+      this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
+
       this.hideInput();
 
   }

@@ -10,6 +10,8 @@ export class Main {
 
         this.backgroundSound = p5.loadSound('sounds/backgroungMusic.mp3', () => { console.log('sonido cargado') 
         this.backgroundSound.setVolume(0.2);})
+
+        this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
         
     }
     playBackgroundSound() {

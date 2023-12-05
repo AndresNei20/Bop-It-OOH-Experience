@@ -11,6 +11,7 @@ export class Loser {
         this.nextButton.style('color', 'white');
         this.nextButton.style('border', 'none');
         this.nextButton.mousePressed(this.handleResultsPressed.bind(this));
+        this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
 
         this.hideInput();
     }
@@ -25,6 +26,8 @@ export class Loser {
 
         p5.fill(26, 26, 26);
         p5.rect(85, 440, 245, 50);
+
+        p5.textFont(this.customFont);
 
         p5.textSize(25);
         p5.fill(250);

@@ -11,6 +11,8 @@ export class Winner {
         this.nextButton.style('border', 'none'); // Elimina el borde
         this.nextButton.mousePressed(this.handleResultsPressed.bind(this));
 
+        this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
+
         this.hideInput();
     }
 
@@ -29,6 +31,8 @@ export class Winner {
         p5.textSize(25);
         p5.fill(250);
         p5.noStroke()
+
+        p5.textFont(this.customFont);
 
         p5.text('CONGRATS', 140, 350);
         p5.text('YOU ARE', 150, 380);
