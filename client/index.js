@@ -166,7 +166,7 @@ const app = p5 => {
     });
 
     //CURRENT SCREEN 
-    currentScreen = cupon; 
+    currentScreen = home; 
 
     socket.on('assigned', (playerAsig) => {
       playerData = playerAsig;
