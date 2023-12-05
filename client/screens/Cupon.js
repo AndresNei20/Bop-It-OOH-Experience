@@ -6,68 +6,73 @@ export class Cupon {
       this.backgroundColor = '#000000'; // Un fondo negro con partículas, asumiendo que tienes una función para dibujarlas
       this.textColor = '#FFFFFF'; // Texto blanco
       this.discountTagColor = '#FF0000'; // Etiqueta roja para el descuento
-      this.buttonColor = '#FFFF00'; // Botón amarillo
-      this.cuponImageSrc = 'path_to_your_cupon_image.png'; // Asegúrate de proporcionar la ruta correcta a la imagen del cupón
+      this.cuponImageSrc = 'path_to_your_cupon_image.png';
       this.customFont = this.p5.loadFont('./fonts/RussoOne-Regular.ttf');
+      this.sendBtn = this.p5.createButton('Send');
+      this.sendBtn.position(160, 550);
+      this.sendBtn.style('background-color', 'FFE610');
+      this.sendBtn.style('color', '3E0A5D');
+      this.sendBtn.style('padding', '10px 20px'); // Agrega un poco de padding para que sea más grande
+      this.sendBtn.style('border', 'none'); // Elimina el borde
+      this.sendBtn.style('border-radius', '5px'); 
+      this.sendBtn.mousePressed(this.handlePlayPressed.bind(this));
+      
+
+      this.hideInput();
     }
   
-    preload() {
-      // Cargar la imagen del cupón
+       
+    setPlayCallback(callback) {
+      this.playCallback = callback;
+    }
+  
+    handlePlayPressed() {
+        if (this.playCallback) {
+            this.playCallback();
+        }
     }
   
     show() {
+
       // Configurar los elementos de la pantalla del cupón
       this.p5.background(this.backgroundColor); // Fondo
       this.p5.background(this.back,50)
       this.p5.fill(this.textColor); // Color del texto
+
+       //Rectángulo blanco
+       this.p5.fill(255);
+       this.p5.rect(this.p5.width / 2 - 180, 80, 360, 560);
   
       // Dibujar imagen del cupón
       this.p5.image(this.cuponImage, this.p5.width / 2 - this.cuponImage.width / 2, 100);
         
       this.p5.textFont(this.customFont);
       // Dibujar texto del cupón
-      this.p5.textSize(20);
+      this.p5.textSize(18);
+      this.p5.fill(0); 
       this.p5.text('50% OFF', 160, 360); // Cambia los números para ajustar la posición
-      this.p5.text('IN ANY HASBRO GAME', 100, 410);
+      this.p5.text('IN ANY HASBRO GAME', 110, 410);
 
-      this.p5.text('Buy your favorite game with a great', 55, 440);
-      this.p5.text('discount. Valid until this date', 85, 470);
-      this.p5.text('20/09/2023', 160, 500);
+      this.p5.text('Buy your favorite game with a great', 45, 440);
+      this.p5.text('discount. Valid until this date', 75, 470);
+      this.p5.text('20/09/2023', 150, 500);
   
-       // Dibujar botón de envío
-       this.p5.fill(this.buttonColor);
-       const buttonWidth = 100;
-       const buttonHeight = 40;
-       const buttonX = this.p5.width / 2 - buttonWidth / 2;
-       const buttonY = 550; // Mover el botón hacia abajo cambiando la coordenada Y
-       
-       this.p5.rect(buttonX, buttonY, buttonWidth, buttonHeight); // Rectángulo del botón
-     
-       // Centrar el texto dentro del botón
-       this.p5.fill('#000000'); // Cambiar el color del texto a negro
-       this.p5.textSize(18);
-       this.p5.textStyle(this.p5.BOLD); // Establecer el texto en negrita
-     
-       // Obtener la posición central horizontal del texto
-       const text = 'SEND';
-       const textWidth = this.p5.textWidth(text); // Obtener el ancho del texto
-       const textX = this.p5.width / 2 - textWidth / 2; // Centrar el texto horizontalmente
-     
-       // Centrar el texto verticalmente
-       const textY = buttonY + buttonHeight / 2 + 6; // Agregar un pequeño ajuste para centrar verticalmente
-       
-       this.p5.text(text, textX, textY); // Texto centrado en el botón// Texto centrado en el botón
-    }
-    
-    hideInput(){
+      this.sendBtn.show();
 
+      
     }
-  
-    showInput(){
-  
-    }
-  
-    mousePressed(){
-  
-    }
+ 
+
+
+  hideInput(){
+      this.sendBtn.hide();
+  }
+
+  showInput(){
+      this.sendBtn.show();
+  }
+
+  mousePressed(){
+
+  }
 }

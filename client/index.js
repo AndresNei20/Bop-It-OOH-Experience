@@ -131,7 +131,7 @@ const app = p5 => {
     
     scream = new Scream(p5);
     shake = new Shake(p5, playerData);
-    cupon = new Cupon(p5);
+    
 
     winner = new Winner(p5);
     winner.setNextCallback(() => {
@@ -157,8 +157,16 @@ const app = p5 => {
       console.log("Cambiado a score por clic en see results");
     });
 
+    cupon = new Cupon(p5);
+    cupon.setPlayCallback(() => {
+      currentScreen.hideInput();
+      currentScreen =  home;
+      currentScreen.showInput();
+      console.log("Cambiado a home por clic en send cupon");
+    });
+
     //CURRENT SCREEN 
-    currentScreen = home; 
+    currentScreen = cupon; 
 
     socket.on('assigned', (playerAsig) => {
       playerData = playerAsig;
@@ -337,13 +345,21 @@ const app = p5 => {
       p5.textSize(32);
       p5.text(`${playerData.score}\nPoints`, p5.width / 2, 100 + yOffsetPoints);
 
-      // Resto del contenido
       p5.textSize(24);
-      p5.text(`Crazy Score\n${playerData.name}\nCongratulations!`, p5.width / 2, 250 + yOffsetRest);
+      p5.fill(255); 
+      p5.text(`Crazy Score`, p5.width / 2, 270 );
+      // Resto del contenido
+      p5.textSize(32);
+      p5.fill(151, 71,255); // Texto en violeta
+      p5.text(`${playerData.name}`, p5.width / 2, 310 );
+      
+      p5.textSize(24);
+      p5.fill(255); 
+      p5.text(`Congratulations!`, p5.width / 2, 350);
 
       // Tabla de líderes
       p5.textSize(22);
-      p5.fill(255); // Texto en blanco
+      p5.fill(0); // Texto en blanco
       p5.text('Leader Board', p5.width / 2, 375 + yOffsetRest);
 
       // Obtener solo los primeros tres líderes
@@ -351,7 +367,7 @@ const app = p5 => {
 
       let startY = 500; // Starting Y position for the leaderboard
       let rectHeight = 80; // Height of each leaderboard entry
-      let padding = 10; // Padding between entries
+      let padding = 4; // Padding between entries
       let colors = ['#ffcc00', '#0099cc', '#ff9900']; // Colors for 1st, 2nd
 
       topThreeLeaders.map((leader, index) => {
