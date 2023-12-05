@@ -49,9 +49,12 @@ const io = require('socket.io')(server, {
 
 let playersConnected = 0;
 let firstPressed = false;
+let actionCompleted = false;
+
 /* let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'button', 'scream', 'shake']; */
 let colors = ['red', 'magenta', 'yellow', 'bopIt', 'orange', 'blue', 'scream',  'shake' ];
 function randomColor() {
+  actionCompleted = false;
   const index = Math.floor(Math.random() * colors.length);
   return colors[index];
 }
@@ -180,11 +183,14 @@ io.on('connect', (socket) => {
     });
 
     socket.on("send-item", (user) => {
-        if (!firstPressed) {
-            firstPressed = true;
-            io.emit('first-player-pressed', user.name); // Emitir a todos los jugadores
-        }
-        
+      if (!actionCompleted || !firstPressed) {
+        actionCompleted = true;
+        firstPressed = true;
+
+        io.emit('first-player-pressed', user.name); // Emitir a todos los jugadores
+        // Resto de tu lógica para actualizar puntuación...
+    }
+
         console.log(user.name, user.score)
         socket.broadcast.emit("other-player-pressed", user.name);
     })

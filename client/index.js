@@ -41,7 +41,7 @@ const app = p5 => {
   
 
   //Timer
-  let startingTime = 10;// el timer empezara desde 60 segundos
+  let startingTime = 30;// el timer empezara desde 60 segundos
   let lastUpdateTime = 0;
   let currentDisplayTime = startingTime; // Tiempo que se muestra actualmente 
   let timeStarted = false; //indica si el temporizador ya esta activo
@@ -67,6 +67,8 @@ const app = p5 => {
   let shakeThreshold = 15;
   let acc = 0;
   let totalAcc = 0;
+
+  let actionSent = false;
 
   p5.preload = function() {
     // Cargar todos los sonidos
@@ -180,6 +182,7 @@ const app = p5 => {
     socket.on('color', (color) => {
         console.log("Received color:", color);
         currentColor = color;
+        actionSent = false;
 
           // Reproducir el sonido del color correspondiente
         if (sounds[currentColor]) {
@@ -260,7 +263,7 @@ const app = p5 => {
     currentScreen.show(p5);
 
     let volume = p5.analyzeVolume();
-      /* console.log("Volume :", volume) */
+    console.log("Volume :", volume)
 
     // Timer function 
     if (timeStarted) {
@@ -354,19 +357,19 @@ const app = p5 => {
     }
 
     if(currentScreen == scream){
-      if(volume > umbralDeGrito ) {
+      
+      if(volume > umbralDeGrito && !actionSent ) {
+        actionSent = true;
         console.log("¡Estoy gritando!", playerData.name);
         // Mostrar algún indicador visual de que el grito fue detectado
         p5.textSize(20);
         p5.fill(255);
         p5.text(`That's what I call screaming`, 100, 120);
 
-        playerData.score += 200;
-
         setTimeout(() => {
           console.log("Esperanding")
         }, 500);
-          
+        playerData.score += 100;
         socket.emit('send-item', playerData);
         socket.emit('updateScore', playerData)
         socket.emit('generate-new-color');
@@ -374,28 +377,28 @@ const app = p5 => {
       }
     }
 
-    if(currentScreen == shake){
+    if(currentScreen == shake ){
+      
       this.startShake();
       onshake = this.onShake.bind(this); // Enlazar el método onShake
 
       /* p5.text(`Acceleration X: ${acc.x}, Y: ${acc.y} Z:  ${acc.z}`,  100, 180);
       p5.text(`TotalACC: ${totalAcc}}`,  100, 220); */
 
-      if (totalAcc > shakeThreshold) {
+      if (totalAcc > shakeThreshold && !actionSent) {
+        actionSent = true;
         console.log("Shake detected!");
 
         // Mostrar algún indicador visual de que el grito fue detectado
         p5.textSize(20);
         p5.fill(255);
         p5.text(`That's what I call shaking`, 100, 120);
-        
-
-        playerData.score += 200; 
 
         setTimeout(() => {
           console.log("Esperanding")
         }, 500);
-          
+
+        playerData.score += 200;  
         socket.emit('send-item', playerData);
         socket.emit('updateScore', playerData)
         socket.emit('generate-new-color');
