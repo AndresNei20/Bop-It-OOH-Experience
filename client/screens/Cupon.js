@@ -51,11 +51,11 @@ export class Cupon {
       this.p5.textSize(18);
       this.p5.fill(0); 
       this.p5.text('50% OFF', 160, 360); // Cambia los números para ajustar la posición
-      this.p5.text('IN ANY HASBRO GAME', 110, 410);
+      this.p5.text('IN ANY HASBRO GAME', this.p5.width / 2 - 110, 410);
 
-      this.p5.text('Buy your favorite game with a great', 45, 440);
-      this.p5.text('discount. Valid until this date', 75, 470);
-      this.p5.text('20/09/2023', 150, 500);
+      this.p5.text('Buy your favorite game with a great',this.p5.width / 2 - 165, 440);
+      this.p5.text('discount. Valid until this date',this.p5.width / 2 - 125, 470);
+      this.p5.text('20/09/2023',this.p5.width / 2 - 50, 500);
   
       this.sendBtn.show();
 

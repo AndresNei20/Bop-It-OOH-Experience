@@ -37,7 +37,7 @@ export class Winner {
     const centerX = p5.width / 2;
     const centerY = p5.height / 1.8;
 
-    p5.textAlign(p5.CENTER, p5.CENTER);
+    p5.textAlign(p5.CENTER, p5.CENTER + 100);
     const instructionText ="CONGRATS!\n\nYOU ARE\nTHE WINNER!";
 
     p5.text(instructionText, centerX, centerY);

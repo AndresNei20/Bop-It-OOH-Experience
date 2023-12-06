@@ -157,9 +157,9 @@ const app = p5 => {
     if(currentScreen == playersScreen){
       
       // Ajusta la posición horizontal para que el texto esté más a la izquierda
-      const playerOneTextX = 90 + 10;
+      const playerOneTextX = 90;
       // Ajusta la posición vertical para centrar el texto dentro de la caja
-      const playerOneTextY = 267 + 45 / 2;
+      const playerOneTextY = 267 + 30 / 2;
       p5.text(`${players.player1.name} `, playerOneTextX, playerOneTextY);
 
       // Ajusta la posición horizontal para que el texto esté más a la izquierda
@@ -207,7 +207,7 @@ const app = p5 => {
       p5.strokeWeight(1);
       p5.textAlign(p5.CENTER, p5.CENTER);
       p5.fill(`${winnerPlayer.color} `); // Aplica el color personalizado a JohnDoe
-      p5.text(`${winnerPlayer.name} `, p5.width / 2, 420);
+      p5.text(`${winnerPlayer.name} `, p5.width / 2, 450);
       
     }
 
